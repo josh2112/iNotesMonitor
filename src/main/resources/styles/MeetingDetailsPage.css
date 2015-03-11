@@ -1,0 +1,22 @@
+@CHARSET "UTF-8";
+
+.editable {
+	-fx-background-color: #eee;
+}
+
+#eventNameLabel {
+	-fx-font-size: 150%;
+}
+
+#locationTextField {
+	-fx-font-weight: bold;
+}
+
+.attendee {
+	-fx-font-size: 80%;
+	-fx-background-color: #ddd;
+	-fx-padding: 2px 8px;
+	-fx-background-radius: 20px;
+	-fx-border-color: #ccc;
+	-fx-border-radius: 20px;
+}

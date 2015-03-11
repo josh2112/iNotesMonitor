@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<?scenebuilder-classpath-element .?>
+<?scenebuilder-stylesheet ../styles/Container.css?>
+
+<BorderPane prefHeight="300.0" prefWidth="400.0" xmlns:fx="http://javafx.com/fxml">
+  <bottom>
+    <FlowPane id="bottomPanel" alignment="CENTER_RIGHT" hgap="15.0" orientation="HORIZONTAL" prefHeight="-1.0" prefWidth="200.0" rowValignment="CENTER" vgap="0.0">
+      <children>
+        <Button fx:id="previousButton" mnemonicParsing="false" onAction="#handlePreviousButton" text="&lt; Previous" />
+        <Button fx:id="nextButton" mnemonicParsing="false" onAction="#handleNextButton" text="Next &gt;" />
+      </children>
+      <padding>
+        <Insets bottom="10.0" right="15.0" top="10.0" />
+      </padding>
+    </FlowPane>
+  </bottom>
+  <stylesheets>
+    <URL value="@../styles/Container.css" />
+  </stylesheets>
+</BorderPane>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.*?>
+<?scenebuilder-classpath-element .?>
+<?scenebuilder-stylesheet ../styles/CalendarSelectionPage.css?>
+
+<fx:root type="BorderPane" prefWidth="406.0" xmlns:fx="http://javafx.com/fxml">
+  <center>
+    <VBox prefHeight="-1.0" prefWidth="-1.0">
+      <children>
+        <Text smooth="true" strokeType="OUTSIDE" strokeWidth="0.0" text="Which calendar do you want to add the event to?">
+          <VBox.margin>
+            <Insets left="10.0" />
+          </VBox.margin>
+        </Text>
+        <ListView fx:id="calendarList" onMouseClicked="#handleCalendarListClick" prefHeight="-1.0" prefWidth="-1.0">
+          <VBox.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="5.0" />
+          </VBox.margin>
+        </ListView>
+      </children>
+    </VBox>
+  </center>
+  <stylesheets>
+    <URL value="@../styles/CalendarSelectionPage.css" />
+  </stylesheets>
+  <top>
+    <StackPane prefHeight="-1.0" prefWidth="-1.0">
+      <children>
+        <AnchorPane fx:id="authorizingPane" disable="false" prefHeight="-1.0" prefWidth="-1.0" visible="false">
+          <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Requesting access to your Google Calendar in a separate browser window. When you accept the request we will continue." wrappingWidth="350.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+            <ProgressIndicator disable="false" progress="-1.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+          </children>
+        </AnchorPane>
+        <AnchorPane fx:id="authorizedPane" prefHeight="-1.0" prefWidth="-1.0" visible="true">
+          <children>
+            <BorderPane prefHeight="-1.0" prefWidth="-1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <center>
+                <StackPane prefHeight="-1.0" prefWidth="-1.0">
+                  <children>
+                    <Text fx:id="emailText" boundsType="LOGICAL" strokeType="OUTSIDE" strokeWidth="0.0" text="(unknown)" textAlignment="CENTER" wrappingWidth="0.0">
+                      <font>
+                        <Font size="16.0" />
+                      </font>
+                    </Text>
+                  </children>
+                </StackPane>
+              </center>
+              <right>
+                <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" prefHeight="30.0" text="Use a different account" textAlignment="LEFT" BorderPane.alignment="CENTER">
+                  <BorderPane.margin>
+                    <Insets right="10.0" />
+                  </BorderPane.margin>
+                </Button>
+              </right>
+            </BorderPane>
+          </children>
+        </AnchorPane>
+      </children>
+    </StackPane>
+  </top>
+</fx:root>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?scenebuilder-classpath-element .?>
+<?scenebuilder-stylesheet ../styles/SummaryPage.css?>
+
+<BorderPane style="-fx-background-color: #0008;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+	<center>
+		<BorderPane fx:id="innerPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="315.0" style="-fx-background-color: #fff;" BorderPane.alignment="CENTER">
+			<bottom>
+				<HBox alignment="CENTER_RIGHT" BorderPane.alignment="CENTER">
+					<children>
+						<Button cancelButton="true" mnemonicParsing="false" onAction="#handleCancelButton" text="Cancel">
+							<padding>
+								<Insets bottom="5.0" left="25.0" right="25.0" top="5.0" />
+							</padding>
+						</Button>
+						<Button fx:id="okButton" defaultButton="true" mnemonicParsing="false" onAction="#handleOkButton" text="OK">
+							<HBox.margin>
+								<Insets left="20.0" />
+							</HBox.margin>
+							<padding>
+								<Insets bottom="5.0" left="30.0" right="30.0" top="5.0" />
+							</padding>
+						</Button>
+					</children>
+					<BorderPane.margin>
+						<Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+					</BorderPane.margin>
+				</HBox>
+			</bottom>
+			<top>
+				<Label text="Sign in" BorderPane.alignment="CENTER_LEFT">
+					<font>
+						<Font size="25.0" />
+					</font>
+					<BorderPane.margin>
+						<Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+					</BorderPane.margin>
+				</Label>
+			</top>
+			<center>
+				<GridPane maxHeight="-Infinity" minHeight="-Infinity" BorderPane.alignment="CENTER">
+					<columnConstraints>
+						<ColumnConstraints hgrow="SOMETIMES" percentWidth="25.0" />
+						<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="5.0" prefWidth="10.0" />
+						<ColumnConstraints hgrow="SOMETIMES" />
+					</columnConstraints>
+					<rowConstraints>
+						<RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" vgrow="SOMETIMES" />
+						<RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" vgrow="SOMETIMES" />
+						<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+						<RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+					</rowConstraints>
+					<BorderPane.margin>
+						<Insets left="20.0" right="20.0" />
+					</BorderPane.margin>
+					<children>
+						<Label text="Username" GridPane.halignment="RIGHT">
+							<GridPane.margin>
+								<Insets />
+							</GridPane.margin>
+						</Label>
+						<Label text="Password" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+							<GridPane.margin>
+								<Insets />
+							</GridPane.margin>
+						</Label>
+						<TextField fx:id="usernameTextField" GridPane.columnIndex="2" />
+						<PasswordField fx:id="passwordTextField" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+						<ProgressIndicator fx:id="spinner" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
+							<GridPane.margin>
+								<Insets bottom="10.0" top="10.0" />
+							</GridPane.margin>
+						</ProgressIndicator>
+						<Label fx:id="loginFailedLabel" text="Sign in failed, please check your usename and password." textFill="#eb0000" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+							<font>
+								<Font name="System Bold" size="12.0" />
+							</font>
+						</Label>
+						<CheckBox fx:id="rememberMeCheckBox" mnemonicParsing="false" text="Remember me" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+					</children>
+				</GridPane>
+			</center>
+			<effect>
+				<DropShadow color="#000000ab" height="75.0" radius="37.0" width="75.0" />
+			</effect>
+		</BorderPane>
+	</center>
+</BorderPane>

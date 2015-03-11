@@ -1,0 +1,6 @@
+@CHARSET "UTF-8";
+
+.calendarIcon {
+	-fx-background-radius: 7px;
+	-fx-stroke-width: 0px;
+}

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/deploy"/>
+	<classpathentry kind="src" path="src/main/test"/>
+	<classpathentry excluding="com/josh2112/inotesmonitor/inotesdata/NotesEmailOLD.java|com/josh2112/inotesmonitor/inotesdata/NotesMeetingOLD.java|com/josh2112/inotesmonitor/inotesdata/NotesMessageOLD.java" kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jOOQ"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/SnarlNetworkBridge/dist/SnarlNetworkBridge.jar" sourcepath="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/SnarlNetworkBridge/dist/SnarlNetworkBridgeSrc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/apache/commons-codec-1.9.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/apache/commons-logging-1.1.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/google/google-api-client-1.17.0-rc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/google/google-api-client-java6-1.17.0-rc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/google/google-api-services-calendar-v3-rev76-1.17.0-rc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/google/google-api-services-oauth2-v2-rev65-1.17.0-rc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/google/google-http-client-1.17.0-rc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/google/google-http-client-jackson2-1.17.0-rc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/google/google-oauth-client-1.17.0-rc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/google/google-oauth-client-java6-1.17.0-rc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/google/google-oauth-client-jetty-1.17.0-rc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/google/guava-16.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/log4j/log4j-api-2.0-rc1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/log4j/log4j-core-2.0-rc1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/log4j/log4j-jcl-2.0-rc1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/misc/jackson-core-2.1.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/misc/jetty-6.1.26.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/misc/jetty-util-6.1.26.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/misc/jsr305-1.3.9.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/misc/servlet-api-2.5.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/misc/xpp3-1.1.4c.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/apache/httpclient-4.3.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/apache/httpcore-4.3.2.jar" sourcepath="C:/Users/jf334/.m2/repository/org/apache/httpcomponents/httpcore/4.3.2/httpcore-4.3.2-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/jsoup.org/jsoup-1.7.3.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ControlsFX-8.0.5"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/misc/jregex1.2_01.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/apache/httpmime-4.3.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/jOOQ-3.4.2/jOOQ-lib/jooq-3.4.2.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/SQLite/sqlite-jdbc-3.8.7.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/jOOQ-3.4.2/jOOQ-lib/jooq-codegen-3.4.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/jOOQ-3.4.2/jOOQ-lib/jooq-meta-3.4.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/apache/commons-lang3-3.3.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jf334/Documents/EclipseWorkspace/ThirdParty/misc/fontawesomefx-8.0.10.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

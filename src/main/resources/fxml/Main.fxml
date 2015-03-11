@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.web.*?>
+<?scenebuilder-stylesheet ../styles/Main.css?>
+
+<StackPane fx:id="container" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<children><BorderPane maxHeight="1.7976931348623157E308" minHeight="100.0" minWidth="200.0">
+
+<stylesheets>
+		<URL value="@../styles/Main.css" />
+	</stylesheets>
+	<center>
+	<HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER_LEFT">
+<children><VBox fx:id="categoriesPane" minWidth="-Infinity" prefWidth="200.0">
+<children><HBox alignment="CENTER" maxWidth="1.7976931348623157E308">
+<children>
+<Label fx:id="usernameLabel" maxWidth="1.7976931348623157E308" minWidth="90.0" styleClass="textInCategoriesPane" text="jf334" BorderPane.alignment="CENTER" HBox.hgrow="ALWAYS">
+<font>
+<Font size="22.0" />
+</font>
+<BorderPane.margin>
+<Insets left="10.0" />
+</BorderPane.margin>
+<VBox.margin>
+<Insets bottom="10.0" left="20.0" right="20.0" top="20.0" />
+</VBox.margin>
+</Label>
+<StackPane BorderPane.alignment="CENTER">
+<children>
+<Button fx:id="refreshButton" mnemonicParsing="false" onAction="#handleRefreshButton" styleClass="toolbar-button">
+<graphic><SVGPath content="m 112.78832,58.712183 c -1.45,-1.45 -3.44,-2.35 -5.65,-2.35 -4.42,0 -7.990004,3.58 -7.990004,8 0,4.42 3.570004,8 7.990004,8 3.73,0 6.84,-2.55 7.73,-6 h -2.08 c -0.82,2.33 -3.04,4 -5.65,4 -3.31,0 -6,-2.69 -6,-6 0,-3.31 2.69,-6 6,-6 1.66,0 3.14,0.69 4.22,1.78 l -3.22,3.22 h 7 v -7 l -2.35,2.35 z" fill="WHITE" />
+</graphic>
+</Button>
+<ProgressIndicator fx:id="spinner" prefHeight="25.0" prefWidth="33.0">
+<FlowPane.margin>
+<Insets left="5.0" right="5.0" />
+</FlowPane.margin>
+</ProgressIndicator>
+</children>
+</StackPane>
+</children>
+<padding>
+<Insets bottom="10.0" left="20.0" right="20.0" top="20.0" />
+</padding>
+</HBox><ProgressBar fx:id="progressBar" maxWidth="1.7976931348623157E308" progress="0.5" HBox.hgrow="ALWAYS">
+<HBox.margin>
+<Insets left="15.0" />
+</HBox.margin>
+<VBox.margin>
+<Insets bottom="10.0" left="15.0" right="15.0" />
+</VBox.margin></ProgressBar><ListView fx:id="categoryList" prefHeight="200.0" prefWidth="200.0" stylesheets="@../styles/CategoryList.css" VBox.vgrow="ALWAYS" />
+</children>
+<HBox.margin>
+<Insets />
+</HBox.margin></VBox><VBox fx:id="messageListPane">
+<children>
+<HBox alignment="CENTER">
+<children>
+<TextField fx:id="searchTextBox" promptText="Search" BorderPane.alignment="CENTER" HBox.hgrow="ALWAYS">
+<BorderPane.margin>
+<Insets left="30.0" right="30.0" />
+</BorderPane.margin>
+</TextField>
+<Button mnemonicParsing="false" onAction="#clearSearchText" styleClass="toolbar-button">
+<padding>
+<Insets bottom="-1.0" left="-1.0" right="-1.0" top="-1.0" />
+</padding>
+<HBox.margin>
+<Insets left="6.0" />
+</HBox.margin>
+<graphic><SVGPath content="M 129.8125 56.34375 A 0.9945608 0.9945608 0 0 0 129.28125 58.0625 L 135.5625 64.375 L 129.28125 70.65625 A 1.0054782 1.0054782 0 1 0 130.71875 72.0625 L 137 65.78125 L 143.28125 72.0625 A 1.0054782 1.0054782 0 1 0 144.71875 70.65625 L 138.4375 64.375 L 144.71875 58.0625 A 0.9945608 0.9945608 0 0 0 143.96875 56.34375 A 0.9945608 0.9945608 0 0 0 143.28125 56.65625 L 137 62.9375 L 130.71875 56.65625 A 0.9945608 0.9945608 0 0 0 130 56.34375 A 0.9945608 0.9945608 0 0 0 129.8125 56.34375 z " scaleX="0.8" scaleY="0.8" />
+</graphic></Button>
+</children>
+<VBox.margin>
+<Insets bottom="10.0" left="20.0" right="10.0" />
+</VBox.margin>
+</HBox><HBox alignment="CENTER" spacing="10.0">
+<children><Text strokeType="OUTSIDE" strokeWidth="0.0" text="Show" /><CheckBox fx:id="showEmailsCheckBox" mnemonicParsing="false" text="Emails" /><CheckBox fx:id="showMeetingsCheckBox" mnemonicParsing="false" text="Meetings">
+<HBox.margin>
+<Insets />
+</HBox.margin></CheckBox>
+</children>
+<padding>
+<Insets bottom="20.0" />
+</padding></HBox>
+<ListView fx:id="messageList" fixedCellSize="0.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="-Infinity" prefWidth="320.0" stylesheets="@../styles/MessageList.css" VBox.vgrow="ALWAYS">
+<BorderPane.margin>
+<Insets right="20.0" />
+</BorderPane.margin>
+</ListView>
+</children>
+<HBox.margin>
+<Insets />
+</HBox.margin>
+<padding>
+<Insets top="25.0" />
+</padding>
+</VBox><VBox fx:id="messageDetailsPane" HBox.hgrow="ALWAYS">
+<children>
+<HBox fx:id="messageToolbar" alignment="CENTER">
+<children>
+<Label fx:id="senderLabel" text="Sender name" textFill="#7f7f7f" BorderPane.alignment="CENTER">
+<font>
+<Font size="22.0" />
+</font>
+</Label><Pane HBox.hgrow="ALWAYS" />
+<Button mnemonicParsing="false" onAction="#handleOpenInBrowserButtonClick" styleClass="toolbar-button" BorderPane.alignment="CENTER">
+<BorderPane.margin>
+<Insets left="20.0" />
+</BorderPane.margin>
+<graphic><SVGPath content="M 19,4 H 5 C 3.89,4 3,4.9 3,6 v 12 c 0,1.1 0.89,2 2,2 H 9 V 18 H 5 V 8 h 14 v 10 h -4 v 2 h 4 c 1.1,0 2,-0.9 2,-2 V 6 C 21,4.9 20.11,4 19,4 z m -7,6 -4,4 h 3 v 6 h 2 v -6 h 3 l -4,-4 z" />
+</graphic>
+</Button>
+</children>
+</HBox>
+<ScrollPane fx:id="recipientsScrollPane" fitToWidth="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" minHeight="0.0" prefViewportHeight="34.0" prefViewportWidth="87.0">
+<content><Label fx:id="recipientsLabel" text="Recipient names" textFill="#7f7f7f" wrapText="true" />
+</content>
+</ScrollPane><Label fx:id="subjectLabel" text="Subject" textFill="#335588">
+<font>
+<Font size="18.0" />
+</font>
+<VBox.margin>
+<Insets bottom="10.0" top="10.0" />
+</VBox.margin></Label><Label fx:id="placeholder_meetingDetailsPanel" alignment="CENTER" maxWidth="1.7976931348623157E308" style="-fx-background-color: #eee;" text="(meetingDetailsPanel placeholder)">
+<VBox.margin>
+<Insets />
+</VBox.margin>
+<padding>
+<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+</padding></Label>
+<WebView fx:id="htmlViewer" blendMode="DARKEN" prefHeight="-1.0" prefWidth="500.0" style="-fx-background-color: ghostwhite;" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
+<BorderPane.margin>
+<Insets />
+</BorderPane.margin>
+<VBox.margin>
+<Insets />
+</VBox.margin>
+</WebView>
+</children>
+<padding>
+<Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+</padding>
+</VBox>
+</children></HBox>
+</center>
+</BorderPane><Label fx:id="placeholder_statusPanel" style="-fx-background-color: #eee;" text="(statusPanel placeholder)" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" StackPane.alignment="BOTTOM_LEFT">
+<padding>
+<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+</padding></Label>
+</children>
+</StackPane>

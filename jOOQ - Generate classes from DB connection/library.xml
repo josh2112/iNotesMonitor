@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration xmlns="http://www.jooq.org/xsd/jooq-codegen-3.4.0.xsd">
+  <!-- Configure the database connection here -->
+  <jdbc>
+    <driver>org.sqlite.JDBC</driver>
+    <url>jdbc:sqlite:iNotesMonitor.sqlite3</url>
+    <user></user>
+    <password></password>
+  </jdbc>
+
+  <generator>
+    <!-- The default code generator. You can override this one, to generate your own code style
+         Defaults to org.jooq.util.DefaultGenerator -->
+    <name>org.jooq.util.DefaultGenerator</name>
+	
+	<strategy>
+      <name>com.josh2112.utils.jooq.CamelCaseGeneratorStrategy</name>
+    </strategy>
+
+    <database>
+      <!-- The database type. The format here is:
+           org.util.[database].[database]Database -->
+      <name>org.jooq.util.sqlite.SQLiteDatabase</name>
+
+      <!-- The database schema (or in the absence of schema support, in your RDBMS this
+           can be the owner, user, database name) to be generated -->
+      <inputSchema></inputSchema>
+
+      <!-- All elements that are generated from your schema
+           (A Java regular expression. Use the pipe to separate several expressions)
+           Watch out for case-sensitivity. Depending on your database, this might be important! -->
+      <includes>.*</includes>
+
+      <!-- All elements that are excluded from your schema
+           (A Java regular expression. Use the pipe to separate several expressions).
+           Excludes match before includes -->
+      <excludes></excludes>
+	  
+	  <customTypes>
+		<customType>
+			<name>Boolean</name>
+			<type>java.lang.Boolean</type>
+			<converter>com.josh2112.utils.jooq.BooleanConverter</converter>
+		</customType>
+		<customType>
+			<name>MessageType</name>
+			<type>com.josh2112.inotesmonitor.inotesdata.NotesMessage.MessageType</type>
+			<converter>com.josh2112.utils.jooq.MessageTypeConverter</converter>
+		</customType>
+		<customType>
+			<name>LocalDateTime</name>
+			<type>java.time.LocalDateTime</type>
+			<converter>com.josh2112.utils.jooq.LocalDateTimeConverter</converter>
+		</customType>
+	  </customTypes>
+	  
+	  <forcedTypes>
+	    <forcedType>
+		    <!-- Convert all columns starting with "Is" and continuing with any character other than a lowercase letter to Boolean -->
+			<name>Boolean</name>
+			<expression>.*\.Is[^a-z].*</expression>
+		</forcedType>
+	    <forcedType>
+			<!-- Convert all "MessageType" columns to the MessageType enum. -->
+			<name>MessageType</name>
+			<expression>.*\.MessageType</expression>
+		</forcedType>
+		<forcedType>
+			<!-- Convert all columns ending with "Date" to LocalDateTime. -->
+			<name>LocalDateTime</name>
+			<expression>.*\..*Date</expression>
+		</forcedType>
+	  </forcedTypes>
+	  
+    </database>
+
+    <target>
+      <!-- The destination package of your generated classes (within the destination directory) -->
+      <packageName>com.josh2112.inotesmonitor.database</packageName>
+
+      <!-- The destination directory of your generated classes -->
+      <directory>.</directory>
+    </target>
+  </generator>
+</configuration>

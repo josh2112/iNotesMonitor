@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.*?>
+<?scenebuilder-classpath-element .?>
+<?scenebuilder-stylesheet ../styles/SummaryPage.css?>
+
+<fx:root type="BorderPane" prefWidth="406.0" xmlns:fx="http://javafx.com/fxml">
+  <center>
+    <VBox alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0" spacing="20.0">
+      <children>
+        <Label alignment="CENTER" text="The meeting has been added!" textAlignment="CENTER" />
+        <Hyperlink id="e" fx:id="eventLink" onAction="#handleEventLink" text="View the event page on Google Calendar." underline="false" />
+      </children>
+      <padding>
+        <Insets bottom="20.0" top="20.0" />
+      </padding>
+    </VBox>
+  </center>
+  <stylesheets>
+    <URL value="@../styles/SummaryPage.css" />
+  </stylesheets>
+</fx:root>

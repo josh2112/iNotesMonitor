@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?scenebuilder-classpath-element .?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity"
+	minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0"
+	prefWidth="340.0" style="-fx-background-color: #eee" xmlns="http://javafx.com/javafx/8"
+	xmlns:fx="http://javafx.com/fxml/1">
+	<stylesheets>
+		<URL value="@../styles/Main.css" />
+	</stylesheets>
+	<children>
+		<VBox fx:id="panel1" prefHeight="200.0" prefWidth="100.0">
+			<children>
+				<Label text="Using iNotesMonitor" textFill="#6f6f6f">
+					<font>
+						<Font size="18.0" />
+					</font>
+					<VBox.margin>
+						<Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+					</VBox.margin>
+				</Label>
+				<Label text="Click on a message to open it in the browser.">
+					<VBox.margin>
+						<Insets left="20.0" />
+					</VBox.margin>
+				</Label>
+				<Label text="The message is marked as read.">
+					<VBox.margin>
+						<Insets bottom="20.0" left="20.0" top="10.0" />
+					</VBox.margin>
+				</Label>
+				<ListView fx:id="msgListClick" prefHeight="150.0"
+					prefWidth="200.0" style="-fx-background-color: transparent;" />
+				<Label text="Click the message to continue.">
+					<VBox.margin>
+						<Insets left="20.0" top="20.0" />
+					</VBox.margin>
+				</Label>
+			</children>
+		</VBox>
+		<VBox fx:id="panel2" prefHeight="200.0" prefWidth="100.0">
+			<children>
+				<Label text="Using iNotesMonitor" textFill="#6f6f6f">
+					<font>
+						<Font size="18.0" />
+					</font>
+					<VBox.margin>
+						<Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+					</VBox.margin>
+				</Label>
+				<Label text="Swipe a message to mark it as read and remove it.">
+					<VBox.margin>
+						<Insets left="20.0" />
+					</VBox.margin>
+				</Label>
+				<Label text="Swipe by clicking and dragging left and right.">
+					<VBox.margin>
+						<Insets bottom="20.0" left="20.0" top="10.0" />
+					</VBox.margin>
+				</Label>
+				<ListView fx:id="msgListSwipe" prefHeight="150.0"
+					prefWidth="200.0" style="-fx-background-color: transparent;" />
+				<Label text="Swipe away the message to continue.">
+					<VBox.margin>
+						<Insets left="20.0" top="20.0" />
+					</VBox.margin>
+				</Label>
+			</children>
+		</VBox>
+		<VBox fx:id="panel3" prefHeight="200.0" prefWidth="100.0">
+			<children>
+				<Label text="Using iNotesMonitor" textFill="#6f6f6f">
+					<font>
+						<Font size="18.0" />
+					</font>
+					<VBox.margin>
+						<Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+					</VBox.margin>
+				</Label>
+				<Label
+					text="Click the blue button to add a meeting to your Google Calendar."
+					wrapText="true">
+					<VBox.margin>
+						<Insets left="20.0" />
+					</VBox.margin>
+				</Label>
+				<Label text="If an event like this already exists we will update it.">
+					<VBox.margin>
+						<Insets bottom="20.0" left="20.0" top="10.0" />
+					</VBox.margin>
+				</Label>
+				<ListView fx:id="msgListGCal" prefHeight="150.0" prefWidth="200.0"
+					style="-fx-background-color: transparent;" />
+				<Label
+					text="Click the &quot;Add to Google Calendar&quot; button to continue."
+					wrapText="true">
+					<VBox.margin>
+						<Insets left="20.0" top="20.0" />
+					</VBox.margin>
+				</Label>
+			</children>
+		</VBox>
+	</children>
+</StackPane>

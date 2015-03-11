@@ -1,0 +1,82 @@
+
+* {
+ theme-background1: #335588;
+ theme-background2: #E8EBF1;
+ theme-background3: white;
+ theme-bg2listCellSelected: #d8dde7;
+ theme-bg3listCellSelected: black;
+}
+
+#categoriesPane {
+	-fx-background-color: theme-background1;
+}
+
+.textInCategoriesPane {
+	-fx-text-fill: white;
+}
+
+#spinner {
+	-fx-progress-color: white;
+}
+
+#messageListPane {
+	-fx-background-color: theme-background2;
+}
+
+#messageDetailsPane {
+	-fx-background-color: theme-background3;
+}
+
+#messageList {
+	-fx-background-color: theme-background2;
+	-fx-padding: 0;
+	-fx-background-insets: 0;
+}
+
+.list-cell {
+	-fx-background-color: theme-background2;
+}
+
+.list-cell:selected {
+	-fx-background-color: theme-bg2listCellSelected;
+}
+
+#categoryList {
+	-fx-background-color: transparent;
+}
+
+.toolbar-button {
+	-fx-background-color: transparent;
+}
+
+/** Don't draw the dropdown arrow on ToggleButtons. */
+.toolbar-button .arrow {
+	-fx-background-color: transparent;
+}
+
+.scroll-pane, .scroll-pane > .viewport {
+   -fx-background-color: transparent;
+}
+
+.progress-bar .bar { 
+    -fx-padding: 1px; 
+    -fx-background-insets: 0; 
+}
+
+/*
+.list-view .scroll-bar:horizontal .increment-arrow,
+.list-view .scroll-bar:horizontal .decrement-arrow,
+.list-view .scroll-bar:horizontal .increment-button,
+.list-view .scroll-bar:horizontal .decrement-button {
+    -fx-padding: 0;
+}
+*/
+
+/*
+// Draw the regular button body only on hover. Directly copied from modena.css's ".button".
+.toolbar-button:hover {
+	-fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color; 
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 5, 4, 3;
+}
+*/

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.*?>
+<?scenebuilder-classpath-element .?>
+<?scenebuilder-stylesheet ../styles/ConflictCheckPage.css?>
+
+<fx:root type="BorderPane" prefWidth="406.0" xmlns:fx="http://javafx.com/fxml">
+  <center>
+    <VBox prefHeight="-1.0" prefWidth="-1.0">
+      <children>
+        <StackPane fx:id="parentStackPane" prefHeight="-1.0" prefWidth="-1.0">
+          <children>
+            <StackPane fx:id="multipleReschedulePane" prefHeight="-1.0" prefWidth="-1.0" visible="false">
+              <children>
+                <Label text="There are multiple events this week that match this description. I don't know which one to replace." textAlignment="CENTER" wrapText="true" />
+              </children>
+            </StackPane>
+            <StackPane fx:id="notFoundReschedulePane" prefHeight="-1.0" prefWidth="-1.0" visible="false">
+              <children>
+                <Label text="Unable to find the event that this event is replacing.  Hit 'Next' to add it anyway." textAlignment="CENTER" wrapText="true" />
+              </children>
+            </StackPane>
+            <StackPane fx:id="okReschedulePane" prefHeight="-1.0" prefWidth="-1.0" visible="true">
+              <children>
+                <VBox prefHeight="-1.0" prefWidth="-1.0">
+                  <children>
+                    <Label text="Will replace the following event:" wrapText="true">
+                      <VBox.margin>
+                        <Insets top="5.0" />
+                      </VBox.margin>
+                    </Label>
+                    <VBox id="eventCard" prefHeight="-1.0" prefWidth="-1.0">
+                      <children>
+                        <Text fx:id="okRescheduleEventName" strokeType="OUTSIDE" strokeWidth="0.0" text="Event Name">
+                          <font>
+                            <Font size="16.0" fx:id="x2" />
+                          </font>
+                        </Text>
+                        <HBox prefHeight="-1.0" prefWidth="-1.0">
+                          <children>
+                            <Label alignment="CENTER_RIGHT" prefHeight="-1.0" prefWidth="75.0" text="in" textAlignment="LEFT">
+                              <labelFor>
+                                <TextField id="locationTextField" prefWidth="250.0" promptText="location" text="" />
+                              </labelFor>
+                              <HBox.margin>
+                                <Insets right="5.0" />
+                              </HBox.margin>
+                            </Label>
+                            <Label id="startDateTextField" fx:id="okRescheduleEventLocation" text="Label">
+                              <font>
+                                <Font name="System Bold" size="13.0" fx:id="x1" />
+                              </font>
+                            </Label>
+                          </children>
+                          <VBox.margin>
+                            <Insets top="10.0" fx:id="x3" />
+                          </VBox.margin>
+                        </HBox>
+                        <HBox prefHeight="-1.0" prefWidth="-1.0" VBox.margin="$x3">
+                          <children>
+                            <Label alignment="CENTER_RIGHT" prefWidth="75.0" text="from">
+                              <labelFor>
+                                <Label id="startDateTextField" fx:id="okRescheduleEventStart" font="$x1" text="Label">
+                                  <HBox.margin>
+                                    <Insets />
+                                  </HBox.margin>
+                                </Label>
+                              </labelFor>
+                              <HBox.margin>
+                                <Insets right="5.0" />
+                              </HBox.margin>
+                            </Label>
+                            <fx:reference source="okRescheduleEventStart" />
+                          </children>
+                        </HBox>
+                        <HBox prefHeight="-1.0" prefWidth="-1.0" VBox.margin="$x3">
+                          <children>
+                            <Label alignment="CENTER_RIGHT" prefWidth="75.0" text="to">
+                              <labelFor>
+                                <Label id="startDateTextField" fx:id="okRescheduleEventEnd" font="$x1" text="Label">
+                                  <HBox.margin>
+                                    <Insets />
+                                  </HBox.margin>
+                                </Label>
+                              </labelFor>
+                              <HBox.margin>
+                                <Insets right="5.0" />
+                              </HBox.margin>
+                            </Label>
+                            <fx:reference source="okRescheduleEventEnd" />
+                          </children>
+                        </HBox>
+                      </children>
+                      <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                      </padding>
+                      <VBox.margin>
+                        <Insets left="10.0" right="10.0" top="10.0" />
+                      </VBox.margin>
+                    </VBox>
+                  </children>
+                </VBox>
+              </children>
+            </StackPane>
+            <StackPane id="multipleReschedulePane" fx:id="multiplePane" prefHeight="-1.0" prefWidth="-1.0" visible="false">
+              <children>
+                <Label text="Multiple events this week that match this description already exist. I don't know what to do." textAlignment="CENTER" wrapText="true" />
+              </children>
+            </StackPane>
+            <StackPane id="okReschedulePane" fx:id="updateExistingPane" prefHeight="-1.0" prefWidth="-1.0" visible="false">
+              <children>
+                <VBox prefHeight="-1.0" prefWidth="-1.0">
+                  <children>
+                    <Label text="Will update the following event:" wrapText="true">
+                      <VBox.margin>
+                        <Insets top="5.0" />
+                      </VBox.margin>
+                    </Label>
+                    <VBox id="eventCard" prefHeight="-1.0" prefWidth="-1.0">
+                      <children>
+                        <Text id="okRescheduleEventName" fx:id="updateExistingEventName" font="$x2" strokeType="OUTSIDE" strokeWidth="0.0" text="Event Name" />
+                        <HBox prefHeight="-1.0" prefWidth="-1.0">
+                          <children>
+                            <Label alignment="CENTER_RIGHT" prefHeight="-1.0" prefWidth="75.0" text="in" textAlignment="LEFT">
+                              <labelFor>
+                                <TextField id="locationTextField" prefWidth="250.0" promptText="location" text="" />
+                              </labelFor>
+                              <HBox.margin>
+                                <Insets right="5.0" />
+                              </HBox.margin>
+                            </Label>
+                            <Label id="startDateTextField" fx:id="updateExistingEventLocation" font="$x1" text="Label" />
+                          </children>
+                          <VBox.margin>
+                            <Insets top="10.0" fx:id="x3" />
+                          </VBox.margin>
+                        </HBox>
+                        <HBox prefHeight="-1.0" prefWidth="-1.0" VBox.margin="$x3">
+                          <children>
+                            <Label alignment="CENTER_RIGHT" prefWidth="75.0" text="from">
+                              <labelFor>
+                                <Label id="startDateTextField" fx:id="updateExistingEventStart" font="$x1" text="Label">
+                                  <HBox.margin>
+                                    <Insets />
+                                  </HBox.margin>
+                                </Label>
+                              </labelFor>
+                              <HBox.margin>
+                                <Insets right="5.0" />
+                              </HBox.margin>
+                            </Label>
+                            <fx:reference source="updateExistingEventStart" />
+                          </children>
+                        </HBox>
+                        <HBox prefHeight="-1.0" prefWidth="-1.0" VBox.margin="$x3">
+                          <children>
+                            <Label alignment="CENTER_RIGHT" prefWidth="75.0" text="to">
+                              <labelFor>
+                                <Label id="startDateTextField" fx:id="updateExistingEventEnd" font="$x1" text="Label">
+                                  <HBox.margin>
+                                    <Insets />
+                                  </HBox.margin>
+                                </Label>
+                              </labelFor>
+                              <HBox.margin>
+                                <Insets right="5.0" />
+                              </HBox.margin>
+                            </Label>
+                            <fx:reference source="updateExistingEventEnd" />
+                          </children>
+                        </HBox>
+                      </children>
+                      <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                      </padding>
+                      <VBox.margin>
+                        <Insets left="10.0" right="10.0" top="10.0" />
+                      </VBox.margin>
+                    </VBox>
+                  </children>
+                </VBox>
+              </children>
+            </StackPane>
+          </children>
+          <padding>
+            <Insets />
+          </padding>
+        </StackPane>
+        <Hyperlink onAction="#handleCalendarLink" text="View the calendar." underline="false">
+          <VBox.margin>
+            <Insets top="10.0" fx:id="x3" />
+          </VBox.margin>
+        </Hyperlink>
+      </children>
+      <padding>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+      </padding>
+    </VBox>
+  </center>
+  <stylesheets>
+    <URL value="@../styles/ConflictCheckPage.css" />
+  </stylesheets>
+</fx:root>

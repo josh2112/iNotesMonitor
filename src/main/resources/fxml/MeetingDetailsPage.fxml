@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.*?>
+<?scenebuilder-classpath-element .?>
+<?scenebuilder-stylesheet ../styles/MeetingDetailsPage.css?>
+
+<fx:root type="BorderPane" prefWidth="406.0" xmlns:fx="http://javafx.com/fxml">
+  <center>
+    <VBox prefHeight="-1.0" prefWidth="-1.0">
+      <children>
+        <TextField fx:id="eventNameLabel" minHeight="29.0" prefWidth="200.0" promptText="event name" styleClass="editable" text="Liberty Blue Software">
+          <VBox.margin>
+            <Insets fx:id="x1" />
+          </VBox.margin>
+        </TextField>
+        <HBox prefHeight="-1.0" prefWidth="-1.0">
+          <children>
+            <Label alignment="CENTER_RIGHT" prefWidth="75.0" text="from">
+              <labelFor>
+                <Label id="startDateTextField" fx:id="startDateLabel" text="Label" HBox.margin="$x1">
+                  <font>
+                    <Font name="System Bold" size="13.0" fx:id="x2" />
+                  </font>
+                </Label>
+              </labelFor>
+              <HBox.margin>
+                <Insets right="5.0" />
+              </HBox.margin>
+            </Label>
+            <fx:reference source="startDateLabel" />
+          </children>
+          <VBox.margin>
+            <Insets bottom="5.0" top="10.0" />
+          </VBox.margin>
+        </HBox>
+        <HBox prefHeight="-1.0" prefWidth="-1.0">
+          <children>
+            <Label alignment="CENTER_RIGHT" prefWidth="75.0" text="to">
+              <labelFor>
+                <Label id="startDateTextField" fx:id="endDateLabel" font="$x2" text="Label">
+                  <HBox.margin>
+                    <Insets fx:id="x1" />
+                  </HBox.margin>
+                </Label>
+              </labelFor>
+              <HBox.margin>
+                <Insets right="5.0" />
+              </HBox.margin>
+            </Label>
+            <fx:reference source="endDateLabel" />
+          </children>
+          <VBox.margin>
+            <Insets bottom="5.0" top="5.0" fx:id="x3" />
+          </VBox.margin>
+        </HBox>
+        <HBox prefHeight="-1.0" prefWidth="-1.0" VBox.margin="$x3">
+          <children>
+            <Label alignment="CENTER_RIGHT" prefHeight="22.0" prefWidth="75.0" text="in" textAlignment="LEFT">
+              <labelFor>
+                <TextField fx:id="locationTextField" minHeight="22.0" prefWidth="250.0" promptText="location" styleClass="editable" text="" HBox.hgrow="ALWAYS" />
+              </labelFor>
+              <HBox.margin>
+                <Insets right="5.0" />
+              </HBox.margin>
+            </Label>
+            <fx:reference source="locationTextField" />
+          </children>
+        </HBox>
+        <HBox prefHeight="-1.0" prefWidth="-1.0" VBox.margin="$x3">
+          <children>
+            <Label alignment="CENTER_RIGHT" prefWidth="75.0" text="with" textAlignment="LEFT" underline="false">
+              <HBox.margin>
+                <Insets right="5.0" />
+              </HBox.margin>
+            </Label>
+            <FlowPane fx:id="attendeesPane" hgap="5.0" maxHeight="50.0" prefHeight="50.0" prefWidth="245.0" vgap="5.0" HBox.hgrow="ALWAYS" />
+          </children>
+        </HBox>
+        <HBox prefHeight="-1.0" prefWidth="-1.0">
+          <children>
+            <Label alignment="CENTER_RIGHT" minWidth="75.0" prefHeight="22.0" prefWidth="75.0" text="details" textAlignment="LEFT">
+              <labelFor>
+                <TextField id="locationTextField" prefWidth="250.0" promptText="location" text="" />
+              </labelFor>
+              <HBox.margin>
+                <Insets right="5.0" />
+              </HBox.margin>
+            </Label>
+            <TextArea fx:id="detailsTextArea" prefHeight="-1.0" prefWidth="-1.0" styleClass="editable" wrapText="true" />
+          </children>
+        </HBox>
+      </children>
+      <padding>
+        <Insets bottom="5.0" top="5.0" fx:id="x3" />
+      </padding>
+      <BorderPane.margin>
+        <Insets left="10.0" right="10.0" top="10.0" />
+      </BorderPane.margin>
+    </VBox>
+  </center>
+  <padding>
+    <Insets fx:id="x1" />
+  </padding>
+  <stylesheets>
+    <URL value="@../styles/MeetingDetailsPage.css" />
+  </stylesheets>
+</fx:root>

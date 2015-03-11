@@ -1,0 +1,6 @@
+@CHARSET "UTF-8";
+
+#eventCard {
+	-fx-border-color: #ddd;
+	-fx-background-color: #eee;
+}

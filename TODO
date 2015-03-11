@@ -1,0 +1,6 @@
+ * Show meeting details in bottom of card
+ * Look into implementing repeating meetings
+ 
+ * When meeting is successfully added to calendar:
+   * "Accept" it (find & make REST call to mark meeting as accepted)
+   * If we accepted it successfully, remove it. 
