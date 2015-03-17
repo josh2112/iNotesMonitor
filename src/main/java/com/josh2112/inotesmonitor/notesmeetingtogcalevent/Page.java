@@ -6,7 +6,6 @@ import com.josh2112.javafx.wizard.WizardContainer;
 import com.josh2112.javafx.wizard.WizardPage;
 
 public enum Page {
-	NotesDataInput( NotesDataInputPage.class.getName() ),
 	MeetingDetails( MeetingDetailsPage.class.getName() ),
 	CalendarSelectionPage( CalendarSelectionPage.class.getName() ),
 	ConflictCheckPage( ConflictCheckPage.class.getName() ),

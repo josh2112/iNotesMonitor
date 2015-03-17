@@ -15,6 +15,7 @@ import javafx.util.Duration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.josh2112.javafx.LoadableContainer;
 import com.josh2112.utility.StringUtils;
 
 public class StatusPanel extends LoadableContainer {

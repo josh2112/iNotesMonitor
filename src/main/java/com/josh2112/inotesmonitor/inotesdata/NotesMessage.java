@@ -186,9 +186,16 @@ public class NotesMessage {
 
 	public void store() {
 		if( messageRecord.update() == 0 ) messageRecord.store();
-		
-		for( NotesMessageRecipientRecord recipient : recipients.get() ) recipient.store();
+		recipients.get().stream().forEach( r -> r.store() );
 		if( isMeeting() ) meetingDetails.get().store();
+	}
+
+	public void delete() {
+		this.load();
+		messageRecord.delete();
+		for( NotesMessageRecipientRecord recipient : recipients.get() ) recipient.delete();
+		if( isMeeting() ) meetingDetails.get().delete();
+		
 	}
 	
 	protected static String fixLotusNotesIdentifier( String item ) {

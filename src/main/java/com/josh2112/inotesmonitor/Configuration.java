@@ -23,9 +23,9 @@ public class Configuration {
 		SAVE_CREDENTIALS( "false" ),		
 		// Number of minutes between new message checks
 		UPDATE_FREQUENCY_MINUTES( "5" ),
-		// Whether or not to show the tutorial at startup.
-		SHOW_TUTORIAL( "true" );
-		
+		SHOW_EMAILS( "true" ),
+		SHOW_MEETINGS( "true" );
+
 		private String defaultValue;
 		public String getDefaultValue() { return defaultValue; }
 		

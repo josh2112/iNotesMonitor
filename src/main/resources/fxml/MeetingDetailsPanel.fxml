@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
+<?import java.net.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
+<?scenebuilder-classpath-element .?>
+<?scenebuilder-stylesheet ../styles/MeetingDetailsPanel.css?>
 
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 <children><Label fx:id="meetingTypeLabel" alignment="BASELINE_LEFT" text="New invitation" textFill="#404040">
@@ -17,7 +20,7 @@
 </VBox.margin>
 <font>
 <Font size="18.0" />
-</font></Label><GridPane hgap="10.0" layoutY="1.806915283203125" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" vgap="5.0">
+</font></Label><GridPane hgap="10.0" layoutY="1.806915283203125" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="400.0" vgap="5.0">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" />
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="100.0" />
@@ -27,8 +30,9 @@
     <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-Infinity" vgrow="SOMETIMES" />
     <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-Infinity" vgrow="SOMETIMES" />
 <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-Infinity" vgrow="SOMETIMES" />
+<RowConstraints maxHeight="1.7976931348623157E308" minHeight="-Infinity" vgrow="SOMETIMES" />
   </rowConstraints>
-<children><Text strokeType="OUTSIDE" strokeWidth="0.0" text="what" GridPane.halignment="RIGHT" /><Text strokeType="OUTSIDE" strokeWidth="0.0" text="who" GridPane.halignment="RIGHT" GridPane.rowIndex="1" /><Text strokeType="OUTSIDE" strokeWidth="0.0" text="where" GridPane.halignment="RIGHT" GridPane.rowIndex="2" /><Text strokeType="OUTSIDE" strokeWidth="0.0" text="when" GridPane.halignment="RIGHT" GridPane.rowIndex="3" /><Label fx:id="meetingTopicText" text="Label" GridPane.columnIndex="1">
+<children><Text strokeType="OUTSIDE" strokeWidth="0.0" text="what" GridPane.halignment="RIGHT" /><Text strokeType="OUTSIDE" strokeWidth="0.0" text="who" GridPane.halignment="RIGHT" GridPane.rowIndex="1" /><Text strokeType="OUTSIDE" strokeWidth="0.0" text="where" GridPane.halignment="RIGHT" GridPane.rowIndex="2" /><Text strokeType="OUTSIDE" strokeWidth="0.0" text="when" GridPane.halignment="RIGHT" GridPane.rowIndex="4" /><Label fx:id="meetingTopicText" text="Label" GridPane.columnIndex="1">
 <font>
 <Font name="System Bold" size="14.0" />
 </font></Label><Label fx:id="meetingChairText" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1">
@@ -37,10 +41,10 @@
 </font></Label><Label fx:id="meetingLocationText" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2">
 <font>
 <Font name="System Bold" size="14.0" />
-</font></Label><Label fx:id="meetingDateTimeText" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3">
+</font></Label><Label fx:id="meetingDateTimeText" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4">
 <font>
 <Font name="System Bold" size="14.0" />
-</font></Label>
+</font></Label><Text strokeType="OUTSIDE" strokeWidth="0.0" text="with" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="TOP" /><FlowPane fx:id="attendeesPane" hgap="5.0" prefWidth="200.0" vgap="5.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 </children>
 </GridPane><Button mnemonicParsing="false" onAction="#handleAddToCalendarButton" text="Add to Google Calendar">
 <VBox.margin>
@@ -52,4 +56,8 @@
 </image></ImageView>
 </graphic></Button>
 </children>
+
+  <stylesheets>
+    <URL value="@../styles/MeetingDetailsPanel.css" />
+  </stylesheets>
 </VBox>

@@ -45,7 +45,7 @@ public class NotesMeetingToGCalEventWizard implements WizardContainer {
 		Scene scene = new Scene( container );
 		stage.setScene( scene );
 		
-		currentPage.set( Page.NotesDataInput );
+		currentPage.set( Page.MeetingDetails );
 		
 		WizardPage newPageInstance = getCurrentPage().getInstance( this );
 		container.setCenter( newPageInstance.getRootNode() );

@@ -4,6 +4,7 @@
 <?import java.net.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.input.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
@@ -44,7 +45,22 @@
 </FlowPane.margin>
 </ProgressIndicator>
 </children>
-</StackPane>
+</StackPane><MenuButton minWidth="-Infinity" mnemonicParsing="false" prefWidth="20.0" styleClass="toolbar-button">
+<graphic><SVGPath content="m 155.51119,60.362183 c 1.1,0 2,-0.9 2,-2 0,-1.1 -0.9,-2 -2,-2 -1.1,0 -2,0.9 -2,2 0,1.1 0.9,2 2,2 z m 0,2 c -1.1,0 -2,0.9 -2,2 0,1.1 0.9,2 2,2 1.1,0 2,-0.9 2,-2 0,-1.1 -0.9,-2 -2,-2 z m 0,6 c -1.1,0 -2,0.9 -2,2 0,1.1 0.9,2 2,2 1.1,0 2,-0.9 2,-2 0,-1.1 -0.9,-2 -2,-2 z" fill="WHITE" />
+</graphic>
+<items><MenuItem text="_Sync">
+<accelerator>
+<KeyCodeCombination alt="UP" code="S" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
+</accelerator></MenuItem>
+    <MenuItem onAction="#handleDebugMenuItem" text="Show _debug panel">
+<accelerator>
+<KeyCodeCombination alt="UP" code="D" control="UP" meta="UP" shift="DOWN" shortcut="DOWN" />
+</accelerator></MenuItem>
+</items>
+<HBox.margin>
+<Insets left="10.0" />
+</HBox.margin>
+</MenuButton>
 </children>
 <padding>
 <Insets bottom="10.0" left="20.0" right="20.0" top="20.0" />
@@ -110,6 +126,9 @@
 <font>
 <Font size="22.0" />
 </font>
+<HBox.margin>
+<Insets />
+</HBox.margin>
 </Label><Pane HBox.hgrow="ALWAYS" />
 <Button mnemonicParsing="false" onAction="#handleOpenInBrowserButtonClick" styleClass="toolbar-button" BorderPane.alignment="CENTER">
 <BorderPane.margin>
@@ -119,11 +138,12 @@
 </graphic>
 </Button>
 </children>
-</HBox>
-<ScrollPane fx:id="recipientsScrollPane" fitToWidth="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" minHeight="0.0" prefViewportHeight="34.0" prefViewportWidth="87.0">
-<content><Label fx:id="recipientsLabel" text="Recipient names" textFill="#7f7f7f" wrapText="true" />
-</content>
-</ScrollPane><Label fx:id="subjectLabel" text="Subject" textFill="#335588">
+</HBox><HBox>
+<children><Text strokeType="OUTSIDE" strokeWidth="0.0" text="To " /><FlowPane fx:id="recipientsPane" hgap="5.0" vgap="5.0" HBox.hgrow="ALWAYS" />
+</children>
+<VBox.margin>
+<Insets top="10.0" />
+</VBox.margin></HBox><Label fx:id="subjectLabel" text="Subject" textFill="#335588">
 <font>
 <Font size="18.0" />
 </font>

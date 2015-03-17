@@ -2,12 +2,14 @@ package com.josh2112.inotesmonitor;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javafx.application.Platform;
-import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,12 +19,10 @@ import javafx.concurrent.Task;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.google.common.base.Stopwatch;
 import com.josh2112.inotesmonitor.INotesClient.MessageCheckPageResult;
 import com.josh2112.inotesmonitor.database.NotesLocalDatabase;
 import com.josh2112.inotesmonitor.database.Tables;
 import com.josh2112.inotesmonitor.inotesdata.NotesMessage;
-import com.josh2112.utils.jooq.LocalDateTimeConverter;
 
 public class MessageCheckService extends Service<List<NotesMessage>> {
 	
@@ -37,9 +37,19 @@ public class MessageCheckService extends Service<List<NotesMessage>> {
 	
 	private INotesClient client;
 	
-	private ReadOnlyObjectWrapper<ObservableList<NotesMessage>> partialMessageList =
+	private List<NotesMessage> messageUpdateRequests = new ArrayList<NotesMessage>();
+	
+	private ReadOnlyObjectWrapper<ObservableList<NotesMessage>> addedUpdatedMessageList =
             new ReadOnlyObjectWrapper<>( FXCollections.<NotesMessage>observableArrayList() );
-    public final ObservableList<NotesMessage> getPartialMessageList() { return partialMessageList.get(); }
+    public final ObservableList<NotesMessage> getAddedUpdatedMessageList() { return addedUpdatedMessageList.get(); }
+    
+    private ReadOnlyObjectWrapper<ObservableList<String>> removedMessageGuidList =
+            new ReadOnlyObjectWrapper<>( FXCollections.<String>observableArrayList() );
+    public final ObservableList<String> getRemovedMessageGuidList() { return removedMessageGuidList.get(); }
+    
+    public void addMessageUpdateRequest( NotesMessage msg ) {
+    	messageUpdateRequests.add( msg );
+    }
 
 	@Override protected Task<List<NotesMessage>> createTask() {
 		return new Task<List<NotesMessage>>() {
@@ -60,26 +70,36 @@ public class MessageCheckService extends Service<List<NotesMessage>> {
 				updateMessage( "Checking for new messages" );
 				updateProgress( -1, 0 );
 				
-				Platform.runLater( () -> partialMessageList.get().clear() );
+				Platform.runLater( () -> {
+					addedUpdatedMessageList.get().clear();
+					removedMessageGuidList.get().clear();
+				} );
 				
 				LocalDateTime stopDate = calculateStopDate();
 				
-				// Parse ONLY messages that aren't in the database, or messages we know about
-				// that are marked unread (to see if they have been read outside our app)
+				// Parse ONLY messages that aren't in the database, messages we know about
+				// that are marked unread (to see if they have been read outside our app),
+				// and other messages that we have been specifically requested to update.
 				//
 				// We do this by getting a list the GUIDs of all read messages in the database,
-				// then skipping a message if its GUID is in this list.
-				List<String> allReadGUIDs = NotesLocalDatabase.getContext()
+				// minus the ones we've been requested to update, then skipping a message if
+				// its GUID is in this list.
+				Set<String> guidsToIgnore = new HashSet<String>( NotesLocalDatabase.getContext()
 						.select( Tables.NotesMessage.GUID )
 						.from( Tables.NotesMessage )
 						.where( Tables.NotesMessage.IsRead.equal( true ) )
-						.orderBy( Tables.NotesMessage.GUID.asc() )
-						.fetch( Tables.NotesMessage.GUID );
+						.fetch( Tables.NotesMessage.GUID ) );
+				
+				guidsToIgnore.removeAll( messageUpdateRequests.stream()
+						.map( req -> req.getGuid() ).collect( Collectors.toList() ) );
+				messageUpdateRequests.clear();
 				
 				int startMessageNum = 1, messageCount = 40;
 				MessageCheckPageResult page;
 				
 				long totalMinutesIntoPast = stopDate.until( LocalDateTime.now(), ChronoUnit.MINUTES );
+				
+				LocalDateTime pageStartDate = LocalDateTime.now();
 				 
 				do {
 					log.debug( String.format( "Retrieving %d messages (%d to %d)...", messageCount,
@@ -99,15 +119,30 @@ public class MessageCheckService extends Service<List<NotesMessage>> {
 					long currentMinutesIntoPast = page.getOldestMessageDate().until( LocalDateTime.now(), ChronoUnit.MINUTES );
 					updateProgress( currentMinutesIntoPast, totalMinutesIntoPast );
 					
+					// Make a list of the GUIDs we know that should be on this page.
+					List<String> knownGuids = NotesLocalDatabase.getContext()
+						.select( Tables.NotesMessage.GUID )
+						.from( Tables.NotesMessage )
+						.where( Tables.NotesMessage.Date.between( page.getOldestMessageDate(), pageStartDate ) )
+						.fetch( Tables.NotesMessage.GUID );
+					
+					List<String> discoveredGuids = page.messages.stream().map( record -> record.getGUID() ).sorted().collect( Collectors.toList() );
+					Set<String> deletedGuids = new HashSet<String>( knownGuids );
+					deletedGuids.removeAll( discoveredGuids );
+					Platform.runLater( () -> removedMessageGuidList.get().addAll( deletedGuids ) );
+					
+					pageStartDate = page.getOldestMessageDate();
+					
+					// Keep the messages we don't already know about
 					List<NotesMessage> messagesOnPage = page.messages.stream()
-							.filter( record -> Collections.binarySearch( allReadGUIDs, record.getGUID() ) < 0 )
+							.filter( record -> !guidsToIgnore.contains( record.getGUID() ) )
 							.map( record -> {
 								try { return client.getMessageContent( record ); }
 								catch( Exception e ) { throw new RuntimeException( e ); }
 							} )
 							.collect( Collectors.toList() );
 					
-					Platform.runLater( () -> partialMessageList.get().addAll( messagesOnPage ) );
+					Platform.runLater( () -> addedUpdatedMessageList.get().addAll( messagesOnPage ) );
 					
 					messagesOnPage.stream().forEach( msg -> msg.store() );
 				}
@@ -115,7 +150,7 @@ public class MessageCheckService extends Service<List<NotesMessage>> {
 				
 				///////////////////////
 
-				return getPartialMessageList();
+				return getAddedUpdatedMessageList();
 			}
 			
 			/**

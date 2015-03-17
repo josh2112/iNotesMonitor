@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ForkJoinPool;
 import java.util.function.Predicate;
 import java.util.logging.LogManager;
 import java.util.stream.Collectors;
@@ -16,39 +13,33 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.HostServices;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.binding.ObjectBinding;
-import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.concurrent.Task;
 import javafx.concurrent.Worker.State;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -56,19 +47,20 @@ import javafx.util.Duration;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.controlsfx.dialog.Dialog.Actions;
 import org.controlsfx.dialog.Dialogs;
 import org.jooq.Result;
 
-import com.google.common.base.Stopwatch;
 import com.josh2112.inotesmonitor.Configuration.Settings;
 import com.josh2112.inotesmonitor.database.NotesLocalDatabase;
 import com.josh2112.inotesmonitor.database.Tables;
-import com.josh2112.inotesmonitor.database.tables.records.NotesMessageRecipientRecord;
 import com.josh2112.inotesmonitor.database.tables.records.NotesMessageRecord;
 import com.josh2112.inotesmonitor.inotesdata.NotesMessage;
 import com.josh2112.inotesmonitor.notesmeetingtogcalevent.GoogleAuthenticationService;
 import com.josh2112.inotesmonitor.notesmeetingtogcalevent.NotesMeetingToGCalEventWizard;
 import com.josh2112.javafx.FXMLLoader;
+import com.josh2112.javafx.LabelUtils;
+import com.josh2112.javafx.LoadableContainer;
 import com.josh2112.javafx.OneTimeChangeListener;
 import com.josh2112.utility.Storage;
 
@@ -102,8 +94,9 @@ public class INotesMonitorMain extends Application {
 	
 	@FXML private ListView<String> categoryList;
 	@FXML private ListView<NotesMessage> messageList;
-	@FXML private Label senderLabel, subjectLabel, recipientsLabel;
-	@FXML private ScrollPane recipientsScrollPane;
+	@FXML private VBox messageDetailsPane;
+	@FXML private Label senderLabel, subjectLabel;
+	@FXML private FlowPane recipientsPane;
 	@FXML private WebView htmlViewer;
 	@FXML private HBox messageToolbar;
 	@FXML private Label usernameLabel;
@@ -122,6 +115,8 @@ public class INotesMonitorMain extends Application {
 	private LoginPanel loginPanel;
 	private BooleanBinding initializationCompleteBinding;
 	
+	private Stage debugWindow;
+	
 	private ReadOnlyObjectProperty<NotesMessage> selectedMessageProperty() {
 		return messageList.getSelectionModel().selectedItemProperty();
 	}
@@ -131,15 +126,17 @@ public class INotesMonitorMain extends Application {
 	private NotesMessageCardActionListener notesMessageCardActionListener = new NotesMessageCardActionListener() {
 		@Override
 		public void openInBrowser( NotesMessage msg ) {
+			messageCheckService.addMessageUpdateRequest( msg );
 			client.openMessageInBrowser( msg );
 			snarlManager.hideNotification();
 		}
 
 		@Override
-		public void remove( NotesMessage item ) {
+		public void markAsRead( NotesMessage item ) {
 			try { client.setMessageIsRead( item, true ); }
-			catch( Exception e ) { e.printStackTrace(); }
-			messages.remove( item );
+			catch( Exception e ) {
+				Dialogs.create().title( "Mark as Read Failed" ).showException( e );
+			}
 			snarlManager.hideNotification();
 		}
 		
@@ -154,7 +151,21 @@ public class INotesMonitorMain extends Application {
 			try {
 				client.acceptMeeting( meeting );
 			} catch( Exception e ) {
-				e.printStackTrace();
+				Dialogs.create().title( "Accept Meeting Failed" ).showException( e );
+			}
+		}
+
+		@Override
+		public void delete( NotesMessage msg ) {
+			try {
+				client.deleteMessage( msg );
+			}
+			catch( Exception e ) {
+				if( Dialogs.create().title( "Delete Message Failed" ).masthead( "Failed to delete this message on the server." )
+					.message( "Do you want to remove it from the list anyway?" ).showConfirm() == Actions.YES ) {
+					messages.remove( msg );
+					msg.delete();
+				}
 			}
 		}
 	};
@@ -186,13 +197,21 @@ public class INotesMonitorMain extends Application {
 		messageCheckService.restart();
 	}
 	
-	private void showTutorialPanel() {
-		final TutorialPanel tutPanel = new TutorialPanel();
-		tutPanel.isDoneProperty().addListener( (value, oldVal, newVal) -> {
-			if( newVal ) tutPanel.detach();
-		} );
-		container.getChildren().add( tutPanel.getContainer() );
-	}
+	@FXML
+    void handleMenuButton( ActionEvent event ) {
+		Control control = (Control)event.getSource();
+		control.getContextMenu().show( control, Side.BOTTOM, 0, 0 );
+    }
+	
+	@FXML
+    void handleDebugMenuItem( ActionEvent event ) {
+		if( debugWindow == null ) {
+			debugWindow = new Stage();
+			debugWindow.setTitle( "Debug - iNotesMonitor" );
+			debugWindow.setScene( new Scene( new DebugPanel( client ).getContainer() ) );
+		}
+		debugWindow.show();
+    }
 	
 	@FXML
     void handleRefreshButton( ActionEvent event ) {
@@ -226,6 +245,12 @@ public class INotesMonitorMain extends Application {
 	@FXML
     void handleOpenInBrowserButtonClick( ActionEvent event ) {
 		notesMessageCardActionListener.openInBrowser( 
+				messageList.getSelectionModel().getSelectedItem() );
+	}
+	
+	@FXML
+    void handleDeleteButtonClick( ActionEvent event ) {
+		notesMessageCardActionListener.delete( 
 				messageList.getSelectionModel().getSelectedItem() );
 	}
     
@@ -268,8 +293,7 @@ public class INotesMonitorMain extends Application {
 		INotesMonitorMain.setHostService( this.getHostServices() );
 		INotesMonitorMain.setParentWindow( stage );
 		
-		/*Region mainPanel = */FXMLLoader.loadFXML( this, "/fxml/Main.fxml" );
-		//container.getChildren().add( mainPanel );
+		FXMLLoader.loadFXML( this, "/fxml/Main.fxml" );
 		
 		stage.setScene( new Scene( container ));
 		stage.minHeightProperty().bind( container.minHeightProperty().add( 100 ) );
@@ -302,27 +326,30 @@ public class INotesMonitorMain extends Application {
 			textFilterUpdater.playFromStart();
 		});
 		
-		ChangeListener<? super Boolean> checkboxListener = (prop, wasSelected, isSelected) -> updateMessageFilter.run();
-		showEmailsCheckBox.selectedProperty().addListener( checkboxListener );
-		showMeetingsCheckBox.selectedProperty().addListener( checkboxListener );
+		showEmailsCheckBox.setSelected( Configuration.getInstance().getBool( Settings.SHOW_EMAILS ) );
+		showMeetingsCheckBox.setSelected( Configuration.getInstance().getBool( Settings.SHOW_MEETINGS ) );
 		
-		ObjectBinding<List<NotesMessageRecipientRecord>> recipientsForSelectedMessage = Bindings.select(
-				selectedMessageProperty(), "recipients" );
+		showEmailsCheckBox.selectedProperty().addListener( (prop, wasSelected, isSelected) -> {
+			Configuration.getInstance().setBool( Settings.SHOW_EMAILS, isSelected );
+			Configuration.getInstance().saveSettings();
+			updateMessageFilter.run();
+		} );
 		
-		StringBinding recipientsListBinding = Bindings.createStringBinding( () -> {
-			if( recipientsForSelectedMessage.get() == null ) return "";
-			else return "To " + recipientsForSelectedMessage.get().stream().map(
-					NotesMessageRecipientRecord::getName ).collect( Collectors.joining( ", "  ) );
-		}, recipientsForSelectedMessage );
-		
-		recipientsLabel.textProperty().bind( recipientsListBinding );
+		showMeetingsCheckBox.selectedProperty().addListener( (prop, wasSelected, isSelected) -> {
+			Configuration.getInstance().setBool( Settings.SHOW_MEETINGS, isSelected );
+			Configuration.getInstance().saveSettings();
+			updateMessageFilter.run();
+		} );
 		
 		selectedMessageProperty().addListener( (prop, oldSelectedItem, newSelectedItem ) -> {
 			if( newSelectedItem != null ) {
 				htmlViewer.getEngine().loadContent( "<html><head><style type=\"text/css\">" +
 						defaultMessageCss + "</style></head><body>" + newSelectedItem.getBody() + "</body></html>" );
-				
+
 				newSelectedItem.load();
+				recipientsPane.getChildren().setAll( LabelUtils.makeLabelList(
+						newSelectedItem.getRecipients().stream().map( r -> r.getName() )
+						.collect( Collectors.toList() ), "attendee", 6 ) );
 			}
 			else htmlViewer.getEngine().loadContent( "" );
 		} );
@@ -341,14 +368,26 @@ public class INotesMonitorMain extends Application {
 		categoryList.getItems().add( "Inbox" );
 		categoryList.getSelectionModel().select( 0 );
 		
-		messageToolbar.disableProperty().bind( selectedMessageProperty().isNull() );
+		messageDetailsPane.visibleProperty().bind( selectedMessageProperty().isNotNull() );
 		
-		// This allows the Message Check Service to do incremental updates. Whenever something is added
-		// to this list
-		messageCheckService.getPartialMessageList().addListener( new ListChangeListener<NotesMessage>() {
-			@Override public void onChanged( ListChangeListener.Change<? extends NotesMessage> change ) {
+		// These allows the Message Check Service to do incremental updates. Whenever something is added
+		// to this list we'll merge it into the master list.
+		messageCheckService.getAddedUpdatedMessageList().addListener(
+			(ListChangeListener.Change<? extends NotesMessage> change) -> {
 				while( change.next() ) {
 					if( change.wasAdded() ) mergeMessages( change.getAddedSubList() );
+				}
+		});
+		messageCheckService.getRemovedMessageGuidList().addListener( 
+			(ListChangeListener.Change<? extends String> change) -> {
+				while( change.next() ) {
+					if( change.wasAdded() ) {
+						log.info( String.format( "Detected %d message(s) deleted (%s)",
+								change.getAddedSubList().size(), change.getAddedSubList() ) );
+						List<NotesMessage> msgsToRemove = messages.stream().filter( m ->
+							change.getAddedSubList().contains( m.getGuid() ) ).collect( Collectors.toList() );
+						msgsToRemove.stream().forEach( m -> m.delete() );
+						messages.removeAll( msgsToRemove );
 				}
 			}
 		});
@@ -418,14 +457,7 @@ public class INotesMonitorMain extends Application {
 		loginPanel.attachAnimated( container );
 		
 		loginPanel.isLoggedInProperty().addListener( (prop, wasLoggedIn, isLoggedIn) -> {
-			if( isLoggedIn ) {
-				loginPanel.detachAnimated();
-
-				if( Configuration.getInstance().getBool( Settings.SHOW_TUTORIAL ) ) {
-					Configuration.getInstance().setBool( Settings.SHOW_TUTORIAL, false );
-					showTutorialPanel();
-				}
-			}
+			if( isLoggedIn ) loginPanel.detachAnimated(); 
 		} );
 		
 		initializationCompleteBinding = Bindings.and( loginPanel.isLoggedInProperty(),

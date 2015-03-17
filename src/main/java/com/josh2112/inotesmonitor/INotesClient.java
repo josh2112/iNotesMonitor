@@ -44,6 +44,19 @@ public class INotesClient {
 	
 	private Log log = LogFactory.getLog( INotesClient.class );
 	
+	@SuppressWarnings( "serial" )
+	public static class LotusINotesUnknownCommandException extends Exception {
+		
+		private String errorHtml;
+		
+		public LotusINotesUnknownCommandException( String errorHtml ) {
+			super( "Lotus iNotes returned 'Unknown Command Exception'" );
+			this.errorHtml = errorHtml;
+		}
+		
+		public String getErrorHtml() { return errorHtml; }
+	}
+	
 	public static class MessageCheckResult {
 		public List<MessageCheckPageResult> pages = new ArrayList<>();
 	}
@@ -55,6 +68,11 @@ public class INotesClient {
 		public MessageCheckPageResult( List<NotesMessageRecord> messages, String pageNonce ) {
 			this.messages = messages;
 			this.pageNonce = pageNonce;
+		}
+		
+		public LocalDateTime getNewestMessageDate() {
+			if( messages.isEmpty() ) return null;
+			else return messages.get( 0 ).getDate();
 		}
 		
 		public LocalDateTime getOldestMessageDate() {
@@ -224,10 +242,6 @@ public class INotesClient {
 		// another HTML document on the server.  This could either be an
 		// a href link in a table or an iframe.  Find the link and download it.
 		if( message.getBody().contains( "Additional HTML Attached" ) ) {
-			
-			
-			
-			
 			Document bodyDoc = Jsoup.parse( message.getBody() );
 			externalBodyLink = bodyDoc.select( "a" ).first().attr( "href" );
 		}
@@ -258,7 +272,7 @@ public class INotesClient {
 	 * @throws Exception
 	 */
 	public void setMessageIsRead( NotesMessage msg, boolean read ) throws Exception {
-		log.debug( "setMessageReadState( " + msg.getGuid() + ", " + read + " ) " );
+		log.debug( "setMessageIsRead( " + msg.getGuid() + ", " + read + " ) " );
 		
 		List<NameValuePair> formData = new ArrayList<>();
 		formData.add( new BasicNameValuePair( "h_SetCommand", read ? "h_ShimmerMarkRead" : "h_ShimmerMarkUnread" ) );
@@ -269,11 +283,37 @@ public class INotesClient {
 		String url = String.format( "https://%s/mail/%s/iNotes/Proxy/?EditDocument&ui=dwa_ulite", host, nsfFilename );
 		HttpPost request = new HttpPost( url );		
 		request.setEntity( new UrlEncodedFormEntity( formData, "ISO-8859-1" ));
+
+		CloseableHttpResponse response = httpClient.execute( request );
+		String result = EntityUtils.toString( response.getEntity() );
+		response.close();
+		if( isErrorResponse( result ) ) throw new LotusINotesUnknownCommandException( result );
+	}
+	
+	public void deleteMessage( NotesMessage msg ) throws Exception {
+		log.debug( "deleteMessage( " + msg.getGuid() + " ) " );
+		
+		List<NameValuePair> formData = new ArrayList<>();
+		formData.add( new BasicNameValuePair( "h_SetCommand", "h_DeletePages") );
+		formData.add( new BasicNameValuePair( "%%Nonce", "DA7255645233CB7B5182C7B32AB6808F" ) );//msg.getMessageNonce() ) );
+		formData.add( new BasicNameValuePair( "h_SetDeleteList", msg.getGuid() ) );
+		formData.add( new BasicNameValuePair( "h_EditAction", "h_Next" ) );
+		formData.add( new BasicNameValuePair( "h_SetReturnUrl", String.format( "https://%s/mail/%s/iNotes", host, nsfFilename ) ) );
+		
+		String url = String.format( "https://%s/mail/%s/iNotes/Proxy/?EditDocument&ui=dwa_ulite", host, nsfFilename );
+		HttpPost request = new HttpPost( url );		
+		request.setEntity( new UrlEncodedFormEntity( formData, "ISO-8859-1" ));
 		
 		CloseableHttpResponse response = httpClient.execute( request );
-		EntityUtils.consumeQuietly( response.getEntity() );
+		String result = EntityUtils.toString( response.getEntity() );
+		response.close();
+		if( isErrorResponse( result ) ) throw new LotusINotesUnknownCommandException( result );
 	}
 
+	private boolean isErrorResponse( String result ) {
+		return result.contains( "IBM Lotus iNotes Error Report" );
+	}
+	
 	private String getUrlContent( URI uri ) throws Exception {
 		log.debug( "getUrlContent( " + uri + " )" );
 		CloseableHttpResponse response = httpClient.execute( new HttpGet( uri ) );
@@ -331,9 +371,10 @@ public class INotesClient {
 		String url = String.format( "https://%s/mail/%s/iNotes/Proxy/?EditDocument&ui=dwa_ulite", host, nsfFilename );
 		HttpPost request = new HttpPost( url );		
 		request.setEntity( new UrlEncodedFormEntity( formData, "ISO-8859-1" ));
-		
+
 		CloseableHttpResponse response = httpClient.execute( request );
-		//EntityUtils.consumeQuietly( response.getEntity() );
-		System.out.println( EntityUtils.toString( response.getEntity() ) );
+		String result = EntityUtils.toString( response.getEntity() );
+		response.close();
+		if( isErrorResponse( result ) ) throw new LotusINotesUnknownCommandException( result );
 	}
 }

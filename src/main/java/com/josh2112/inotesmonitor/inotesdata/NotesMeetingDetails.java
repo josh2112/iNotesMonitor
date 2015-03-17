@@ -145,4 +145,9 @@ public class NotesMeetingDetails {
 			attendeeRecord.store();
 		}
 	}
+
+	public void delete() {
+		meetingDetailsRecord.delete();
+		meetingAttendeeRecords.stream().forEach( r -> r.delete() );
+	}
 }

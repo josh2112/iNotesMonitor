@@ -1,6 +1,4 @@
-package com.josh2112.inotesmonitor;
-
-import com.josh2112.javafx.FXMLLoader;
+package com.josh2112.javafx;
 
 import javafx.scene.layout.Pane;
 
