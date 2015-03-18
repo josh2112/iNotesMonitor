@@ -27,11 +27,10 @@ public class SqlScriptRunner {
 	}
 	
 	private List<String> getStatements( String resource ) throws IOException, URISyntaxException {
-		List<String> lines = new ArrayList<>();
+		List<String> lines;
 		InputStream stream = this.getClass().getResourceAsStream( resource );
 		try( BufferedReader reader = new BufferedReader( new InputStreamReader( stream ) ) ) {
-			String line;
-			while(( line = reader.readLine() ) != null ) lines.add( line );
+			lines = reader.lines().collect( Collectors.toList() );
 		}
 		
 		// Trim all lines and remove blank and comment lines

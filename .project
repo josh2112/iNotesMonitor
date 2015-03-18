@@ -20,4 +20,24 @@
 		<nature>org.eclipse.xtext.ui.shared.xtextNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<filteredResources>
+		<filter>
+			<id>1426706062143</id>
+			<name></name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-.*</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1426706089850</id>
+			<name>src/main/deploy</name>
+			<type>26</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-deploy</arguments>
+			</matcher>
+		</filter>
+	</filteredResources>
 </projectDescription>

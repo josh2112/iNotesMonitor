@@ -1,12 +1,16 @@
 package com.josh2112.javafx;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javafx.scene.image.Image;
 
@@ -50,12 +54,11 @@ public class SVGCache {
 	public String getPath( String filePath ) {
 		if( filePath == null ) return null;
 		if( !svgPathsByFilePath.containsKey( filePath )) {
-			try {
-				URL url = getClass().getResource( filePath );
-				svgPathsByFilePath.put( filePath,
-						new String( Files.readAllBytes( Paths.get( url.toURI() ) ) ) );
+			InputStream stream = getClass().getResourceAsStream( filePath );
+			try( BufferedReader reader = new BufferedReader( new InputStreamReader( stream ) ) ) {
+				svgPathsByFilePath.put( filePath, reader.lines().collect( Collectors.joining( "\n" ) ) );
 			}
-			catch( IOException | URISyntaxException e ) {
+			catch( IOException e ) {
 				log.error( "SVGCache: Unable to load file " + filePath, e );
 			}
 		}
