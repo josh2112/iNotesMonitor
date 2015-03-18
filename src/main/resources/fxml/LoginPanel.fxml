@@ -9,9 +9,14 @@
 <?scenebuilder-classpath-element .?>
 <?scenebuilder-stylesheet ../styles/SummaryPage.css?>
 
-<BorderPane style="-fx-background-color: #0008;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 	<center>
-		<BorderPane fx:id="innerPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="315.0" style="-fx-background-color: #fff;" BorderPane.alignment="CENTER">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
+<children><Pane>
+<effect>
+<DropShadow height="75.0" radius="37.0" width="75.0" />
+</effect></Pane>
+		<BorderPane fx:id="innerPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER">
 			<bottom>
 				<HBox alignment="CENTER_RIGHT" BorderPane.alignment="CENTER">
 					<children>
@@ -78,7 +83,7 @@
 								<Insets bottom="10.0" top="10.0" />
 							</GridPane.margin>
 						</ProgressIndicator>
-						<Label fx:id="loginFailedLabel" text="Sign in failed, please check your usename and password." textFill="#eb0000" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+						<Label fx:id="loginFailedLabel" text="Sign-in failed, please check your username and password." textFill="#eb0000" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.rowIndex="3">
 							<font>
 								<Font name="System Bold" size="12.0" />
 							</font>
@@ -87,9 +92,8 @@
 					</children>
 				</GridPane>
 			</center>
-			<effect>
-				<DropShadow color="#000000ab" height="75.0" radius="37.0" width="75.0" />
-			</effect>
 		</BorderPane>
+</children>
+</StackPane>
 	</center>
 </BorderPane>

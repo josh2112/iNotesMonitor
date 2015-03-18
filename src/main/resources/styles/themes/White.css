@@ -1,0 +1,8 @@
+
+.root {
+	theme-backgroundDark: white;
+	theme-foregroundDark: black;
+	theme-backgroundMedium: theme-backgroundDark;
+	theme-backgroundLight: theme-backgroundDark;
+	theme-foregroundLight: theme-foregroundDark;
+}

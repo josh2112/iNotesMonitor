@@ -1,48 +1,55 @@
+﻿
+/* For some reason, without an empty .root {} here the .list-view {} declaration doesn't get parsed? */
+.root {}
 
-* {
- theme-background1: #335588;
- theme-background2: #E8EBF1;
- theme-background3: white;
- theme-bg2listCellSelected: #d8dde7;
- theme-bg3listCellSelected: black;
+.list-view {
+	-fx-background-color: transparent;
+}
+
+.list-cell {
+	-fx-background-color: transparent;
 }
 
 #categoriesPane {
-	-fx-background-color: theme-background1;
-}
-
-.textInCategoriesPane {
-	-fx-text-fill: white;
-}
-
-#spinner {
-	-fx-progress-color: white;
+	-fx-background-color: theme-backgroundDark;
 }
 
 #messageListPane {
-	-fx-background-color: theme-background2;
+	-fx-background-color: theme-backgroundMedium;
 }
 
 #messageDetailsPane {
-	-fx-background-color: theme-background3;
+	-fx-background-color: theme-backgroundLight;
+}
+
+#usernameLabel {
+	-fx-text-fill: theme-foregroundDark;
+}
+
+#spinner {
+	-fx-progress-color: theme-foregroundDark;
+}
+
+.svg-icon {
+	-fx-fill: theme-foregroundDark;
+}
+
+#categoryList .list-cell {
+	-fx-font-size: 16;
+	-fx-padding: 10 20 10 30;
+}
+
+#categoryList .list-cell:selected {
+	-fx-background-color: derive( theme-backgroundDark, -15% );
 }
 
 #messageList {
-	-fx-background-color: theme-background2;
 	-fx-padding: 0;
 	-fx-background-insets: 0;
 }
 
-.list-cell {
-	-fx-background-color: theme-background2;
-}
-
-.list-cell:selected {
-	-fx-background-color: theme-bg2listCellSelected;
-}
-
-#categoryList {
-	-fx-background-color: transparent;
+#messageList .list-cell:selected {
+	-fx-background-color: derive( theme-backgroundMedium, -5% );
 }
 
 .toolbar-button {
@@ -63,29 +70,17 @@
     -fx-background-insets: 0; 
 }
 
+#senderLabel {
+	-fx-text-fill: theme-foregroundLight;
+}
+
+#subjectLabel {
+	-fx-text-fill: theme-foregroundLight;
+}
+
 .attendee {
-	-fx-font-size: 80%;
-	-fx-background-color: #eee;
-	-fx-padding: 2px 8px;
+	-fx-font-size: 85%;
+	-fx-background-color: theme-backgroundMedium;
 	-fx-background-radius: 4px;
-	-fx-border-color: #ccc;
-	-fx-border-radius: 4px;
+	-fx-padding: 2px 8px;
 }
-
-/*
-.list-view .scroll-bar:horizontal .increment-arrow,
-.list-view .scroll-bar:horizontal .decrement-arrow,
-.list-view .scroll-bar:horizontal .increment-button,
-.list-view .scroll-bar:horizontal .decrement-button {
-    -fx-padding: 0;
-}
-*/
-
-/*
-// Draw the regular button body only on hover. Directly copied from modena.css's ".button".
-.toolbar-button:hover {
-	-fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color; 
-    -fx-background-insets: 0, 1, 2;
-    -fx-background-radius: 5, 4, 3;
-}
-*/

@@ -14,12 +14,8 @@ public class WebViewDialog extends Dialog {
 		htmlViewer.getEngine().loadContent( html );
 		
 		htmlViewer.getEngine().setJavaScriptEnabled( true );
-	       
-	    // create the dialog with a custom graphic and the gridpane above as the
-	    // main content region
-	    //setResizable(false);
+		
 	    setIconifiable( false );
-	    //setGraphic(new ImageView(HelloDialog.class.getResource("login.png").toString()));
 	    setContent( htmlViewer );
 	    getActions().addAll( Dialog.Actions.OK );
 	}

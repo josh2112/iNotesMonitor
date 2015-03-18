@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?scenebuilder-classpath-element .?>
+
+<BorderPane prefHeight="300.0" prefWidth="400.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<padding>
+<Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+</padding>
+<top><Label text="Add to Google Calendar" textFill="#7f7f7f">
+<font>
+<Font size="22.0" />
+</font></Label>
+</top>
+<bottom>
+<HBox spacing="15.0" BorderPane.alignment="CENTER">
+<children><Button mnemonicParsing="false" onAction="#handleCancelButton" text="Cancel" /><Region HBox.hgrow="ALWAYS" />
+        <Button fx:id="previousButton" mnemonicParsing="false" onAction="#handlePreviousButton" text="&lt; Previous" />
+        <Button fx:id="nextButton" mnemonicParsing="false" onAction="#handleNextButton" text="Next &gt;" />
+</children>
+</HBox>
+</bottom>
+</BorderPane>

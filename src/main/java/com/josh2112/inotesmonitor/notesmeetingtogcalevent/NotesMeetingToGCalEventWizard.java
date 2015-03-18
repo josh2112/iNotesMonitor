@@ -7,27 +7,25 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.josh2112.inotesmonitor.NotesMessageCardActionListener;
 import com.josh2112.inotesmonitor.inotesdata.NotesMessage;
-import com.josh2112.javafx.FXMLLoader;
+import com.josh2112.javafx.LoadableContainer;
 import com.josh2112.javafx.wizard.WizardContainer;
 import com.josh2112.javafx.wizard.WizardPage;
 
-public class NotesMeetingToGCalEventWizard implements WizardContainer {
+public class NotesMeetingToGCalEventWizard extends LoadableContainer implements WizardContainer {
 
 	@FXML Button previousButton, nextButton;
 
-	private BorderPane container;
-	
 	private Log log = LogFactory.getLog( NotesMeetingToGCalEventWizard.class );
+	
+	private NotesMessageCardActionListener actionListener;
 	
 	// currentPage property
 	private ObjectProperty<Page> currentPage = new SimpleObjectProperty<Page>();
@@ -35,20 +33,16 @@ public class NotesMeetingToGCalEventWizard implements WizardContainer {
 	private Page getCurrentPage() { return currentPage.get(); }
 	
 	public NotesMeetingToGCalEventWizard( NotesMessage meeting, NotesMessageCardActionListener actionListener ) {
+		super( "NotesMeetingToGCalEventWizard" );
+		
+		this.actionListener = actionListener;
+		
 		log.info( "NotesMeetingToGCalEventWizard started" );
-		
-		Stage stage = new Stage();
-		stage.setTitle( "Notes Meeting => GCal Event" );	
-		
-		container = FXMLLoader.loadFXML( this, "/fxml/Container.fxml" );
-		
-		Scene scene = new Scene( container );
-		stage.setScene( scene );
 		
 		currentPage.set( Page.MeetingDetails );
 		
 		WizardPage newPageInstance = getCurrentPage().getInstance( this );
-		container.setCenter( newPageInstance.getRootNode() );
+		((BorderPane)getContainer()).setCenter( newPageInstance.getRootNode() );
 		newPageInstance.activateWithConfiguration( new MeetingConfiguration( meeting, actionListener ) );
 		
 		newPageInstance.canNavigateToNextPageProperty().addListener( new InvalidationListener() {
@@ -59,8 +53,6 @@ public class NotesMeetingToGCalEventWizard implements WizardContainer {
 		
 		previousButton.setDisable( true );
 		reevaluateNextButton();
-		
-        stage.show();
 	}
 	
 	private void setCurrentPage( Page newPage ) {
@@ -82,7 +74,7 @@ public class NotesMeetingToGCalEventWizard implements WizardContainer {
 		} );
 		
 		// TODO: Fancy transition
-		container.setCenter( newPageInstance.getRootNode() );
+		((BorderPane)getContainer()).setCenter( newPageInstance.getRootNode() );
 		
 		currentPage.set( newPage );
 		
@@ -102,6 +94,11 @@ public class NotesMeetingToGCalEventWizard implements WizardContainer {
 		if( getCurrentPage().getInstance( this ).verify()) {
 			setCurrentPage( Page.values()[getCurrentPage().ordinal()+1] );
 		}
+    }
+
+	@FXML
+	public void handleCancelButton( ActionEvent event ) {
+		actionListener.cancelAddToGoogleCalendar();
     }
 	
 	// WizardContainer implementation

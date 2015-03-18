@@ -8,7 +8,6 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.*?>
 <?scenebuilder-classpath-element .?>
-<?scenebuilder-stylesheet ../styles/SummaryPage.css?>
 
 <fx:root type="BorderPane" prefWidth="406.0" xmlns:fx="http://javafx.com/fxml">
   <center>
@@ -22,7 +21,4 @@
       </padding>
     </VBox>
   </center>
-  <stylesheets>
-    <URL value="@../styles/SummaryPage.css" />
-  </stylesheets>
 </fx:root>

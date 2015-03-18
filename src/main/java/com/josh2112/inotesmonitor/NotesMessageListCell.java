@@ -33,7 +33,7 @@ public class NotesMessageListCell extends ListCell<NotesMessage> {
     @FXML private Label senderLabel, dateTimeLabel, topicLabel;
     @FXML private GridPane gridPane;
     
-    private static final ImmutableMap<MessageType, String> iconPathByMessageType = ImmutableMap.<MessageType,String>builder()
+    public static final ImmutableMap<MessageType, String> iconPathByMessageType = ImmutableMap.<MessageType,String>builder()
     		.put( MessageType.NEW_INVITATION, "/images/newInvitation.svg" )
     		.put( MessageType.ACCEPTED_INVITATION, "/images/acceptedInvitation.svg" )
 			.put( MessageType.RESCHEDULED_INVITATION, "/images/rescheduledMeeting.svg" )

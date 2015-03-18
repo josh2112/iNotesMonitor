@@ -2,7 +2,9 @@ package com.josh2112.inotesmonitor;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.Predicate;
@@ -15,7 +17,9 @@ import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -28,12 +32,17 @@ import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -83,6 +92,8 @@ public class INotesMonitorMain extends Application {
 	private static void setParentWindow( Stage pw ) { parentWindow = pw; }
 	public static Stage getParentWindow() { return parentWindow; }
 	
+	private Stage debugWindow;
+	
 	private INotesClient client = new INotesClient( SERVER );
 	private Timeline periodicUpdater;
 	
@@ -105,21 +116,24 @@ public class INotesMonitorMain extends Application {
 	@FXML private ProgressIndicator spinner;
 	@FXML private TextField searchTextBox;
 	@FXML private CheckBox showEmailsCheckBox, showMeetingsCheckBox;
+	@FXML private Menu themesMenu;
 	
 	@FXML private Label placeholder_meetingDetailsPanel;
-	@FXML private MeetingDetailsPanel meetingDetailsPanel;
+	private MeetingDetailsPanel meetingDetailsPanel;
 	
 	@FXML private Label placeholder_statusPanel;
-	@FXML private StatusPanel statusPanel;
+	private StatusPanel statusPanel;
+	
+	@FXML private StackPane detailsPanelContainer;
 	
 	private LoginPanel loginPanel;
 	private BooleanBinding initializationCompleteBinding;
 	
-	private Stage debugWindow;
-	
 	private ReadOnlyObjectProperty<NotesMessage> selectedMessageProperty() {
 		return messageList.getSelectionModel().selectedItemProperty();
 	}
+	
+	private ObjectProperty<LoadableContainer> eventWizardProperty = new SimpleObjectProperty<LoadableContainer>();
 	
 	private ObservableList<NotesMessage> messages = FXCollections.<NotesMessage>observableArrayList();
 	
@@ -142,14 +156,24 @@ public class INotesMonitorMain extends Application {
 		
 		@Override
 		public void addToGoogleCalendar( NotesMessage meeting ) {
-			new NotesMeetingToGCalEventWizard( meeting, notesMessageCardActionListener );
+			eventWizardProperty.set( new NotesMeetingToGCalEventWizard( meeting, notesMessageCardActionListener ) );
+			detailsPanelContainer.getChildren().add( eventWizardProperty.get().getContainer() );
 			snarlManager.hideNotification();
+		}
+		
+		@Override
+		public void cancelAddToGoogleCalendar() {
+			if( eventWizardProperty.get() != null ) {
+				detailsPanelContainer.getChildren().remove( eventWizardProperty.get().getContainer() );
+				eventWizardProperty.set( null );
+			}
 		}
 
 		@Override
 		public void acceptMeeting( NotesMessage meeting ) {
 			try {
-				client.acceptMeeting( meeting );
+				// TODO: Doesn't work
+				//client.acceptMeeting( meeting );
 			} catch( Exception e ) {
 				Dialogs.create().title( "Accept Meeting Failed" ).showException( e );
 			}
@@ -161,8 +185,9 @@ public class INotesMonitorMain extends Application {
 				client.deleteMessage( msg );
 			}
 			catch( Exception e ) {
-				if( Dialogs.create().title( "Delete Message Failed" ).masthead( "Failed to delete this message on the server." )
-					.message( "Do you want to remove it from the list anyway?" ).showConfirm() == Actions.YES ) {
+				if( Dialogs.create().title( "Delete Message Failed" )
+						.masthead( "Failed to delete this message on the server." )
+						.message( "Do you want to remove it from the list anyway?" ).showConfirm() == Actions.YES ) {
 					messages.remove( msg );
 					msg.delete();
 				}
@@ -211,6 +236,7 @@ public class INotesMonitorMain extends Application {
 			debugWindow.setScene( new Scene( new DebugPanel( client ).getContainer() ) );
 		}
 		debugWindow.show();
+		debugWindow.toFront();
     }
 	
 	@FXML
@@ -261,24 +287,27 @@ public class INotesMonitorMain extends Application {
 		log.info( APP_NAME_PRETTY + " started" );
 		
 		Storage.initApplicationStorage( APP_NAME );
+		Storage storage = Storage.getInstance();
 		
 		String iconResourcePath = "/package/linux/NotesMeetingToGCalEvent.png";
 		stage.getIcons().add( new Image( this.getClass().getResourceAsStream( iconResourcePath )));
 		
+		String defaultMessageStyleCssResourcePath = "/defaultMessageStyle.css"; 
+		
 		// Pull these resources out of the .jar file into the local 'resources' directory.
-		Storage.getInstance().maybeUnpackResources( new String[] { iconResourcePath, "/defaultMessageStyle.css" } );
+		storage.maybeUnpackResources( new String[] { iconResourcePath,
+				defaultMessageStyleCssResourcePath, "/styles/themes/Blue.css", "/styles/themes/White.css" } );
 		
 		try {
 			defaultMessageCss = String.join( System.lineSeparator(), Files.readAllLines(
-					Paths.get( Storage.getInstance().getAppResourcesDirectory().getAbsolutePath(), "defaultMessageStyle.css" ) ) );
+					storage.resourcePathToFileSystemPath( defaultMessageStyleCssResourcePath ) ) );
 		}
 		catch( IOException e ) {
-			log.error( e );
+			log.fatal( "Error loading default message CSS", e );
 		}
 		
 		snarlManager = new SnarlManager( "josh2112", APP_NAME, APP_NAME_PRETTY );
-		snarlManager.setIcon( new File( Storage.getInstance().getAppResourcesDirectory(),
-	    			new File( iconResourcePath ).getName() ) );
+		snarlManager.setIcon( storage.resourcePathToFileSystemPath( iconResourcePath ).toFile() );
 		snarlManager.setNotificationAction( () -> {
 			stage.show();
 			stage.toFront();
@@ -295,10 +324,13 @@ public class INotesMonitorMain extends Application {
 		
 		FXMLLoader.loadFXML( this, "/fxml/Main.fxml" );
 		
-		stage.setScene( new Scene( container ));
+		stage.setScene( new Scene( container ) );
 		stage.minHeightProperty().bind( container.minHeightProperty().add( 100 ) );
 		stage.minWidthProperty().bind( container.minWidthProperty().add( 50 ) );
 		stage.setTitle( APP_NAME_PRETTY );
+		
+		statusPanel = insertCustomComponent( new StatusPanel(), placeholder_statusPanel );
+		StackPane.setAlignment( statusPanel.getContainer(), Pos.BOTTOM_LEFT );
 		
 		usernameLabel.textProperty().bind( client.usernameProperty() );
 		
@@ -309,10 +341,14 @@ public class INotesMonitorMain extends Application {
 		
 		refreshButton.visibleProperty().bind( spinner.visibleProperty().not() );
 		
-		messageList.setCellFactory( (list) -> new NotesMessageListCell() );
+		categoryList.setCellFactory( (list) -> new CategoryListCell() );
+		categoryList.getItems().add( "Inbox" );
+		categoryList.getSelectionModel().select( 0 );
 		
 		FilteredList<NotesMessage> filteredMessages = messages.filtered( messageFilter );
 
+		messageList.setCellFactory( (list) -> new NotesMessageListCell() );
+		
 		messageList.setItems( filteredMessages.sorted( (m1, m2) -> m2.getDate().compareTo( m1.getDate() ) ) );
 		
 		final Runnable updateMessageFilter = () -> {
@@ -350,6 +386,12 @@ public class INotesMonitorMain extends Application {
 				recipientsPane.getChildren().setAll( LabelUtils.makeLabelList(
 						newSelectedItem.getRecipients().stream().map( r -> r.getName() )
 						.collect( Collectors.toList() ), "attendee", 6 ) );
+				
+				if( eventWizardProperty.get() != null ) {
+					detailsPanelContainer.getChildren().remove( eventWizardProperty.get().getContainer() );
+					eventWizardProperty.set( null );
+				}
+
 			}
 			else htmlViewer.getEngine().loadContent( "" );
 		} );
@@ -359,16 +401,13 @@ public class INotesMonitorMain extends Application {
 		meetingDetailsPanel.getContainer().visibleProperty().bind( Bindings.selectBoolean( selectedMessageProperty(), "meeting" ) );
 		meetingDetailsPanel.notesMessageProperty().bind( selectedMessageProperty() );
 		
-		statusPanel = insertCustomComponent( new StatusPanel(), placeholder_statusPanel );
-		StackPane.setAlignment( statusPanel.getContainer(), Pos.BOTTOM_LEFT );
-		
 		senderLabel.textProperty().bind( Bindings.selectString( selectedMessageProperty(), "sender" ) );
 		subjectLabel.textProperty().bind( Bindings.selectString( selectedMessageProperty(), "subject" ) );
 		
-		categoryList.getItems().add( "Inbox" );
-		categoryList.getSelectionModel().select( 0 );
-		
-		messageDetailsPane.visibleProperty().bind( selectedMessageProperty().isNotNull() );
+		// Only show the message details pane if we have a message selected and the event wizard is not
+		// active.
+		messageDetailsPane.visibleProperty().bind( selectedMessageProperty().isNotNull().and( 
+				eventWizardProperty.isNull() ) );
 		
 		// These allows the Message Check Service to do incremental updates. Whenever something is added
 		// to this list we'll merge it into the master list.
@@ -438,7 +477,6 @@ public class INotesMonitorMain extends Application {
 		
 		NotesLocalDatabase.initializationStateProperty().addListener( (prop, oldInitState, newInitState) -> {
 			if( newInitState == State.SUCCEEDED ) {
-				//reloadMessages();
 				Result<NotesMessageRecord> allMsgs = NotesLocalDatabase.getContext()
 						.selectFrom( Tables.NotesMessage )
 						.orderBy( Tables.NotesMessage.Date.desc() )
@@ -452,6 +490,7 @@ public class INotesMonitorMain extends Application {
 						.showException( NotesLocalDatabase.getInitializationException() );
 			}		
 		});
+		
 		
 		loginPanel = new LoginPanel( client );
 		loginPanel.attachAnimated( container );
@@ -470,7 +509,34 @@ public class INotesMonitorMain extends Application {
 			}
 		} );
 		
+		ToggleGroup themesToggleGroup = new ToggleGroup();
+		Path themesPath = storage.resourcePathToFileSystemPath( "/styles/themes" );
+		
+		try( DirectoryStream<Path> stream = Files.newDirectoryStream( themesPath, "*.css" ) ) {
+			for( Path entry : stream ) {
+				final RadioMenuItem item = new RadioMenuItem( entry.getFileName().toString().split( "\\." )[0] );
+				item.selectedProperty().addListener( (prop, oldVal, newVal) -> {
+					if( newVal ) setUITheme( item.getText() );
+				} );
+				item.setToggleGroup( themesToggleGroup );
+				themesMenu.getItems().add( item );
+			}
+		} catch( IOException e1 ) {
+			log.fatal( "Failed to load themes", e1 );
+		}
+		
+		setUITheme( "Blue" );
+		
 		stage.show();
+	}
+	
+	public void setUITheme( String themeName ) {
+		themesMenu.getItems().stream().filter( i -> i.getText().equals( themeName ) ).findFirst().ifPresent(
+				i -> ((RadioMenuItem)i).setSelected( true ) );
+		
+		ObservableList<String> stylesheets = INotesMonitorMain.getParentWindow().getScene().getStylesheets();
+		stylesheets.removeIf( s -> s.contains( "/themes/" ) );
+		stylesheets.add( "/styles/themes/" + themeName + ".css" );
 	}
 	
 	private <T extends LoadableContainer> T insertCustomComponent( T component, javafx.scene.Node placeholder ) {
@@ -480,32 +546,6 @@ public class INotesMonitorMain extends Application {
 		parent.getChildren().add( indexInParent, component.getContainer() );
 		return component;
 	}
-	
-	/*
-	private void reloadMessages() {
-		messages.clear();
-		Task<Void> loadMessagesTask = new Task<Void>() {
-			@Override protected Void call() throws Exception {
-				Result<NotesMessageRecord> allMsgs = NotesLocalDatabase.getContext()
-						.selectFrom( Tables.NotesMessage )
-						.orderBy( Tables.NotesMessage.Date.desc() )
-						.fetch();
-				
-				for( int i=0; i<allMsgs.size(); i += 100 ) {
-					final List<NotesMessage> loadedMessages = allMsgs.subList( i, Math.min( i + 100, allMsgs.size() ) ).stream()
-							.map( record -> NotesMessage.fromDatabase( record ) )
-							.collect( Collectors.toList() );
-					Platform.runLater( () -> mergeMessages( loadedMessages ) );
-				}
-				
-				return null;
-			}
-			
-		};
-		
-		ForkJoinPool.commonPool().submit( loadMessagesTask );
-	}
-	*/
 	
 	/***
 	 * Merges the given message list with the existing message list. Any new messages

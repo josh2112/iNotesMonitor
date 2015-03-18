@@ -5,8 +5,21 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.CodeSource;
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.josh2112.inotesmonitor.INotesMonitorMain;
 
 public class Storage {
+
+	private static Log log = LogFactory.getLog( Storage.class );
 	
 	private static Storage applicationStorage = null;
 	
@@ -61,6 +74,11 @@ public class Storage {
 	public File getAppResourcesDirectory() {
 		return maybeCreateDirectory( new File( getAppDirectory(), "resources" ) );
 	}
+	
+	public Path resourcePathToFileSystemPath( String resourceUrl ) {
+		Path resourcePath = Paths.get( ".", resourceUrl ).normalize();
+		return getAppResourcesDirectory().toPath().resolve( resourcePath );
+	}
 
 	/**
 	 * Extract the resources given by the URLs from the jar file and save them in the
@@ -69,7 +87,9 @@ public class Storage {
 	 */
 	public void maybeUnpackResources( String[] resourceURLs ) {
 		for( String url : resourceURLs ) {
-			File outFilePath = new File( getAppResourcesDirectory(), new File( url ).getName() );
+			Path extractPath = resourcePathToFileSystemPath( url );
+			maybeCreateDirectory( extractPath.getParent().toFile() );
+			File outFilePath = extractPath.toFile();
 			if( !outFilePath.isFile() ) {
 				InputStream in = this.getClass().getResourceAsStream( url );
 				OutputStream out;
@@ -80,10 +100,12 @@ public class Storage {
 			        while(( readBytes = in.read( buffer )) > 0 ) out.write( buffer, 0, readBytes );
 			        out.close();
 			        in.close();
+			        log.info( String.format( "Extracted resource '%s' to path '%s'", url, extractPath ) );
 			    }
 			    catch( IOException e ) {
-			        e.printStackTrace();
+			    	log.fatal( String.format( "Failed to extract resource '%s'", url ), e );
 			    }
+			    
 			}
 		}
 	}
