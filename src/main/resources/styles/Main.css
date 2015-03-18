@@ -1,4 +1,5 @@
-﻿
+@CHARSET "UTF-8";
+
 /* For some reason, without an empty .root {} here the .list-view {} declaration doesn't get parsed? */
 .root {}
 

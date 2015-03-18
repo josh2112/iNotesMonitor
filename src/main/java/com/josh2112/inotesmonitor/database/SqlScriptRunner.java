@@ -1,6 +1,9 @@
 package com.josh2112.inotesmonitor.database;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -19,12 +22,17 @@ public class SqlScriptRunner {
 	
 	private List<String> sql;
 	
-	public SqlScriptRunner( URL resource ) throws IOException, URISyntaxException {
+	public SqlScriptRunner( String resource ) throws IOException, URISyntaxException {
 		sql = getStatements( resource );
 	}
 	
-	private List<String> getStatements( URL resource ) throws IOException, URISyntaxException {
-		List<String> lines = Files.readAllLines( Paths.get( resource.toURI() ) );
+	private List<String> getStatements( String resource ) throws IOException, URISyntaxException {
+		List<String> lines = new ArrayList<>();
+		InputStream stream = this.getClass().getResourceAsStream( resource );
+		try( BufferedReader reader = new BufferedReader( new InputStreamReader( stream ) ) ) {
+			String line;
+			while(( line = reader.readLine() ) != null ) lines.add( line );
+		}
 		
 		// Trim all lines and remove blank and comment lines
 		lines = lines.stream().map( String::trim ).filter( line ->

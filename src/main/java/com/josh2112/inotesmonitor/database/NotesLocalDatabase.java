@@ -76,7 +76,7 @@ public class NotesLocalDatabase {
 			conn = tryConnect();
 			context = DSL.using( conn, SQLDialect.SQLITE );
 			
-			new SqlScriptRunner( NotesLocalDatabase.class.getResource( "/scripts/schema.sql" ) ).run( context );
+			new SqlScriptRunner( "/scripts/schema.sql" ).run( context );
 			
 			return null;
 		}
